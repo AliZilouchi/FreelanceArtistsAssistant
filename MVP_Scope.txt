@@ -1,0 +1,21 @@
+MVP Scope:
+
+1. Signup/Login
+
+2. User Profile + Settings
+
+3. Dashboard Summary
+
+4. Add/Edit an Artwork
+
+5. List & Filter Artworks
+
+6. Record a Sale
+
+7. Record Sending Artwork to a Gallery
+
+8. Record Returning Artwork From Gallery
+
+9. Sales History Page
+
+10. Bulk input for Sale or Gallery

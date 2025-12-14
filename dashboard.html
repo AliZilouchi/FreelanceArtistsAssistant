@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+</head>
+<body>
+
+<h2>Dashboard</h2>
+<button onclick="logout()">Logout</button>
+
+<div id="stats"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabase = supabase.createClient(
+  "https://biuohuzmtvclqqwsmgkp.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdW9odXptdHZjbHFxd3NtZ2twIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NDcyMDAsImV4cCI6MjA4MDMyMzIwMH0.POOa9mTwFTgOfoXeb1-9DNNbT-QaGla-W-5b6WXO12w"
+);
+
+async function loadStats() {
+  const { data: artworks } = await supabase
+    .from("artifacts")
+    .select("*");
+
+  const total = artworks.length;
+  
+  document.getElementById("stats").innerHTML = `
+      <p>Total Artworks: ${total}</p>
+      <a href="artifacts.html">View Artifacts</a><br>
+      <a href="artifact-add.html">Add New Artifact</a>
+  `;
+}
+
+async function logout() {
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
+
+loadStats();
+</script>
+
+</body>
+</html>
