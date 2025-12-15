@@ -523,7 +523,7 @@
       login_button_en: 'Login'
     };
 
-    let currentLang = 'fa';
+    /* let currentLang = 'fa'; */
 
     const translations = {
       fa: {
@@ -560,32 +560,32 @@
     function updateContent() {
       const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
       
-      document.getElementById('subtitle').textContent = currentLang === 'fa' 
+      document.getElementById('subtitle').textContent = lang === 'fa' 
         ? (config.subtitle_fa || defaultConfig.subtitle_fa)
         : (config.subtitle_en || defaultConfig.subtitle_en);
       
-      document.getElementById('main-heading').textContent = currentLang === 'fa'
+      document.getElementById('main-heading').textContent = lang === 'fa'
         ? (config.main_heading_fa || defaultConfig.main_heading_fa)
         : (config.main_heading_en || defaultConfig.main_heading_en);
       
-      document.getElementById('description').textContent = currentLang === 'fa'
+      document.getElementById('description').textContent = lang === 'fa'
         ? (config.description_fa || defaultConfig.description_fa)
         : (config.description_en || defaultConfig.description_en);
       
-      document.getElementById('signup-btn').querySelector('span').textContent = currentLang === 'fa'
+      document.getElementById('signup-btn').querySelector('span').textContent = lang === 'fa'
         ? (config.signup_button_fa || defaultConfig.signup_button_fa)
         : (config.signup_button_en || defaultConfig.signup_button_en);
       
-      document.getElementById('login-btn').querySelector('span').textContent = currentLang === 'fa'
+      document.getElementById('login-btn').querySelector('span').textContent = lang === 'fa'
         ? (config.login_button_fa || defaultConfig.login_button_fa)
         : (config.login_button_en || defaultConfig.login_button_en);
 
-      document.getElementById('feature-1-title').textContent = translations[currentLang].feature1Title;
-      document.getElementById('feature-1-text').textContent = translations[currentLang].feature1Text;
-      document.getElementById('feature-2-title').textContent = translations[currentLang].feature2Title;
-      document.getElementById('feature-2-text').textContent = translations[currentLang].feature2Text;
-      document.getElementById('feature-3-title').textContent = translations[currentLang].feature3Title;
-      document.getElementById('feature-3-text').textContent = translations[currentLang].feature3Text;
+      document.getElementById('feature-1-title').textContent = translations[lang].feature1Title;
+      document.getElementById('feature-1-text').textContent = translations[lang].feature1Text;
+      document.getElementById('feature-2-title').textContent = translations[lang].feature2Title;
+      document.getElementById('feature-2-text').textContent = translations[lang].feature2Text;
+      document.getElementById('feature-3-title').textContent = translations[lang].feature3Title;
+      document.getElementById('feature-3-text').textContent = translations[lang].feature3Text;
     }
 
     async function onConfigChange(config) {
