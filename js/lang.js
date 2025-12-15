@@ -56,3 +56,5 @@ function updateContent() {
 document.addEventListener("DOMContentLoaded", () => {
   switchLanguage(currentLang);
 });
+
+window.switchLanguage = switchLanguage;
