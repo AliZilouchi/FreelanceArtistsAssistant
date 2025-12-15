@@ -1,13 +1,11 @@
 <!doctype html>
 <html lang="fa" dir="rtl" class="h-full">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Freelance Artists Assistant | دستیار هنرمندان آزاد</title>
-  <script src="./js/supabase.js"></script>
-  <script src="./js/lang.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- <script src="/_sdk/element_sdk.js"></script> -->
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" src="./js/lang.js"></script>
+  <script type="module" src="./js/supabase.js"></script>
+  <title>Freelance Artists Assistant | دستیار هنرمندان آزاد</title>
   <style>
     body {
       box-sizing: border-box;
@@ -430,8 +428,6 @@
     }
   </style>
   <style>@view-transition { navigation: auto; }</style>
-  /* <script src="/_sdk/data_sdk.js" type="text/javascript"></script> */
-  /* <script src="https://cdn.tailwindcss.com" type="text/javascript"></script> */
  </head>
  <body class="h-full"><!-- Animated Background -->
   <div class="animated-bg">
@@ -445,7 +441,7 @@
     <div class="language-toggle"><button class="lang-btn active" data-lang="fa" id="btn-fa">فارسی</button> <button class="lang-btn" data-lang="en" id="btn-en">English</button>
     </div><!-- Logo Section -->
     <div class="logo-section">
-     <div class="logo-graphic"><img src="/assets/logo.svg" alt="Honarapp Logo" id="logo-img" onerror="this.style.display='none'; this.alt='Logo failed to load';" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));">
+     <div class="logo-graphic"><img src="https://logo-placeholder.com/150x150" alt="Honarapp Logo" id="logo-img" onerror="this.style.display='none'; this.alt='Logo failed to load';" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));">
      </div>
      <div class="logo-text" id="logo-text">
       HONARAPP
@@ -520,6 +516,69 @@
     };
 
     let currentLang = 'fa';
+
+    const translations = {
+      fa: {
+        feature1Title: 'مدیریت پروژه',
+        feature1Text: 'ردیابی پروژه‌ها و ددلاین‌ها',
+        feature2Title: 'مالی هوشمند',
+        feature2Text: 'صورتحساب و پیگیری درآمد',
+        feature3Title: 'مدیریت مشتری',
+        feature3Text: 'سازماندهی اطلاعات مشتریان'
+      },
+      en: {
+        feature1Title: 'Project Management',
+        feature1Text: 'Track projects and deadlines',
+        feature2Title: 'Smart Finance',
+        feature2Text: 'Invoicing and income tracking',
+        feature3Title: 'Client Management',
+        feature3Text: 'Organize client information'
+      }
+    };
+
+    function switchLanguage(lang) {
+      currentLang = lang;
+      const html = document.documentElement;
+      html.setAttribute('lang', lang);
+      html.setAttribute('dir', lang === 'fa' ? 'rtl' : 'ltr');
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+
+      updateContent();
+    }
+
+    function updateContent() {
+      const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+      
+      document.getElementById('subtitle').textContent = currentLang === 'fa' 
+        ? (config.subtitle_fa || defaultConfig.subtitle_fa)
+        : (config.subtitle_en || defaultConfig.subtitle_en);
+      
+      document.getElementById('main-heading').textContent = currentLang === 'fa'
+        ? (config.main_heading_fa || defaultConfig.main_heading_fa)
+        : (config.main_heading_en || defaultConfig.main_heading_en);
+      
+      document.getElementById('description').textContent = currentLang === 'fa'
+        ? (config.description_fa || defaultConfig.description_fa)
+        : (config.description_en || defaultConfig.description_en);
+      
+      document.getElementById('signup-btn').querySelector('span').textContent = currentLang === 'fa'
+        ? (config.signup_button_fa || defaultConfig.signup_button_fa)
+        : (config.signup_button_en || defaultConfig.signup_button_en);
+      
+      document.getElementById('login-btn').querySelector('span').textContent = currentLang === 'fa'
+        ? (config.login_button_fa || defaultConfig.login_button_fa)
+        : (config.login_button_en || defaultConfig.login_button_en);
+
+      document.getElementById('feature-1-title').textContent = translations[currentLang].feature1Title;
+      document.getElementById('feature-1-text').textContent = translations[currentLang].feature1Text;
+      document.getElementById('feature-2-title').textContent = translations[currentLang].feature2Title;
+      document.getElementById('feature-2-text').textContent = translations[currentLang].feature2Text;
+      document.getElementById('feature-3-title').textContent = translations[currentLang].feature3Title;
+      document.getElementById('feature-3-text').textContent = translations[currentLang].feature3Text;
+    }
 
     async function onConfigChange(config) {
       const baseFontStack = '-apple-system, BlinkMacSystemFont, sans-serif';
@@ -653,5 +712,5 @@
     document.getElementById('login-btn').addEventListener('click', () => {
       console.log('Login clicked');
     });
-    </script>
+  </script>
 </html>
