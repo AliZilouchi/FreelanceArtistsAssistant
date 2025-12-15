@@ -545,13 +545,13 @@
     };
 
     function switchLanguage(_lang) {
-      lang = _lang;
+      localStorage.setItem("lang", _lang);
       const html = document.documentElement;
-      html.setAttribute('lang', lang);
-      html.setAttribute('dir', lang === 'fa' ? 'rtl' : 'ltr');
+      html.setAttribute('lang', _lang);
+      html.setAttribute('dir', _lang === 'fa' ? 'rtl' : 'ltr');
 
       document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.lang === lang);
+        btn.classList.toggle('active', btn.dataset.lang === _lang);
       });
 
       updateContent();
