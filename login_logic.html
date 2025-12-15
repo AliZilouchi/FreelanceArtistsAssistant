@@ -2,39 +2,47 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Artist Manager – Login</title>
+  <title>Signup</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<h2>Login</h2>
-<input id="email" placeholder="Email">
-<input id="password" placeholder="Password" type="password">
-<button onclick="login()">Login</button>
+  <h2>Signup</h2>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const supabase = window.supabase.createClient(
-//   "postgresql://postgres:[Abbas.10]@db.biuohuzmtvclqqwsmgkp.supabase.co:5432/postgres",
-    "https://biuohuzmtvclqqwsmgkp.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdW9odXptdHZjbHFxd3NtZ2twIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NDcyMDAsImV4cCI6MjA4MDMyMzIwMH0.POOa9mTwFTgOfoXeb1-9DNNbT-QaGla-W-5b6WXO12w"
-);
+  <input id="email" type="email" placeholder="Email"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
+  <button onclick="signup()">Create Account2</button>
 
-async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  <pre id="output"></pre>
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
+  <script>
+    const supabase = window.supabase.createClient(
+      "https://biuohuzmtvclqqwsmgkp.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdW9odXptdHZjbHFxd3NtZ2twIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NDcyMDAsImV4cCI6MjA4MDMyMzIwMH0.POOa9mTwFTgOfoXeb1-9DNNbT-QaGla-W-5b6WXO12w"
 
-  if (error) {
-    alert(error.message);
-  } else {
-    window.location.href = "dashboard.html";
-  }
-}
-</script>
+    );
+
+    async function signup() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password
+      });
+
+      if (error) {
+        document.getElementById("output").innerText = "❌ " + error.message;
+        console.error(error);
+        return;
+      }
+
+      document.getElementById("output").innerText =
+        "✅ Signup successful! Check email for confirmation.\n\n" +
+        JSON.stringify(data, null, 2);
+      console.log(data);
+    }
+  </script>
 
 </body>
 </html>

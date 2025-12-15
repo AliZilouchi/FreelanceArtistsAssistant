@@ -1,48 +1,418 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Signup</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body>
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup | Honarapp</title>
 
-  <h2>Signup</h2>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
 
-  <input id="email" type="email" placeholder="Email"><br><br>
-  <input id="password" type="password" placeholder="Password"><br><br>
-  <button onclick="signup()">Create Account2</button>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { height: 100%; }
+      body {
+        height: 100%;
+        font-family: "Vazirmatn", "Inter", sans-serif;
+        background: linear-gradient(135deg, #1a1410 0%, #0a0a0a 100%);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      [dir="ltr"] body { font-family: "Inter", sans-serif; }
 
-  <pre id="output"></pre>
+      .page-wrapper { width: 100%; max-width: 440px; }
 
-  <script>
-    const supabase = window.supabase.createClient(
-      "https://biuohuzmtvclqqwsmgkp.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdW9odXptdHZjbHFxd3NtZ2twIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NDcyMDAsImV4cCI6MjA4MDMyMzIwMH0.POOa9mTwFTgOfoXeb1-9DNNbT-QaGla-W-5b6WXO12w"
+      .language-toggle {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+      }
+      .lang-button {
+        background: transparent;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        color: rgba(255, 255, 255, 0.6);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+      .lang-button:hover { border-color: rgba(212, 175, 55, 0.6); color: rgba(255, 255, 255, 0.9); }
+      .lang-button.active { background: rgba(212, 175, 55, 0.15); border-color: #d4af37; color: #d4af37; }
 
-    );
-
-    async function signup() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password
-      });
-
-      if (error) {
-        document.getElementById("output").innerText = "❌ " + error.message;
-        console.error(error);
-        return;
+      .login-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 16px;
+        padding: 3rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       }
 
-      document.getElementById("output").innerText =
-        "✅ Signup successful! Check email for confirmation.\n\n" +
-        JSON.stringify(data, null, 2);
-      console.log(data);
-    }
-  </script>
+      .logo-section { text-align: center; margin-bottom: 2.5rem; }
+      .logo-image {
+        width: 80px; height: 80px; margin: 0 auto 1rem;
+        background: rgba(212, 175, 55, 0.1);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2rem;
+      }
+      .logo-title {
+        font-size: 1.5rem; font-weight: 700; color: #d4af37;
+        letter-spacing: 2px; margin-bottom: 0.5rem;
+      }
 
-</body>
+      .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+      .page-subtitle {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.6);
+        text-align: center;
+        margin-bottom: 2rem;
+        font-weight: 400;
+      }
+
+      .login-form { display: flex; flex-direction: column; gap: 1.5rem; }
+      .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+      .form-label { font-size: 0.9rem; font-weight: 500; color: rgba(255, 255, 255, 0.9); }
+
+      .form-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 8px;
+        color: #ffffff;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+      }
+      .form-input:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.12);
+        border-color: #d4af37;
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+      }
+      .form-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+
+      .submit-button {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        border: none;
+        border-radius: 8px;
+        color: #000000;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        margin-top: 0.5rem;
+      }
+      .submit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+      }
+      .submit-button:active { transform: translateY(0); }
+
+      .signup-section {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(212, 175, 55, 0.2);
+      }
+      .signup-text { font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
+      .signup-link {
+        color: #d4af37;
+        text-decoration: none;
+        font-weight: 600;
+        margin-left: 0.25rem;
+        transition: color 0.3s ease;
+      }
+      [dir="ltr"] .signup-link { margin-left: 0; margin-right: 0.25rem; }
+      .signup-link:hover { color: #ffd700; }
+
+      .error-box {
+        display: none;
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(255, 80, 80, 0.35);
+        background: rgba(255, 80, 80, 0.08);
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.9rem;
+        line-height: 1.35;
+      }
+      .success-box {
+        display: none;
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(80, 255, 160, 0.35);
+        background: rgba(80, 255, 160, 0.08);
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.9rem;
+        line-height: 1.35;
+      }
+
+      @media (max-width: 640px) {
+        body { padding: 1rem; }
+        .login-container { padding: 2rem 1.5rem; }
+        .page-title { font-size: 1.5rem; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page-wrapper">
+      <div class="language-toggle">
+        <button class="lang-button" id="lang-fa">فارسی</button>
+        <button class="lang-button" id="lang-en">English</button>
+      </div>
+
+      <main class="login-container">
+        <header class="logo-section">
+          <div class="logo-image">🎨</div>
+          <h1 class="logo-title">A.Z</h1>
+        </header>
+
+        <section>
+          <h2 class="page-title" id="signup_title">ایجاد حساب کاربری</h2>
+          <p class="page-subtitle" id="signup_subtitle">فقط چند ثانیه تا شروع</p>
+
+          <form class="login-form" id="signup-form">
+            <div class="form-group">
+              <label for="email-input" class="form-label" id="email_label">ایمیل</label>
+              <input
+                type="email"
+                id="email-input"
+                name="email"
+                class="form-input"
+                placeholder="your@email.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password-input" class="form-label" id="password_label">رمز عبور</label>
+              <input
+                type="password"
+                id="password-input"
+                name="password"
+                class="form-input"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="confirm-password-input" class="form-label" id="confirm_password_label">تکرار رمز عبور</label>
+              <input
+                type="password"
+                id="confirm-password-input"
+                name="confirmPassword"
+                class="form-input"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <button type="submit" class="submit-button" id="signup_button">ثبت نام</button>
+
+            <div class="error-box" id="error-box"></div>
+            <div class="success-box" id="success-box"></div>
+          </form>
+        </section>
+
+        <footer class="signup-section">
+          <span class="signup-text" id="have_account">حساب کاربری دارید؟</span>
+          <a href="login.html" class="signup-link" id="login_link">وارد شوید</a>
+        </footer>
+      </main>
+    </div>
+
+    <!-- Supabase UMD (global window.supabase) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+    <script>
+      // ---------------------------
+      // 1) Language persistence
+      // ---------------------------
+      const i18n = {
+        fa: {
+          signup_title: "ایجاد حساب کاربری",
+          signup_subtitle: "فقط چند ثانیه تا شروع",
+          email_label: "ایمیل",
+          password_label: "رمز عبور",
+          confirm_password_label: "تکرار رمز عبور",
+          signup_button: "ثبت نام",
+          have_account: "حساب کاربری دارید؟",
+          login_link: "وارد شوید",
+          email_ph: "your@email.com",
+          pass_ph: "••••••••",
+          confirm_ph: "••••••••",
+          pass_mismatch: "رمز عبور و تکرار آن یکسان نیست.",
+          weak_pass: "رمز عبور باید حداقل 6 کاراکتر باشد.",
+          created_check_email: "حساب ساخته شد. لطفاً ایمیل خود را برای تایید بررسی کنید.",
+        },
+        en: {
+          signup_title: "Create an account",
+          signup_subtitle: "Just a few seconds to start",
+          email_label: "Email",
+          password_label: "Password",
+          confirm_password_label: "Confirm password",
+          signup_button: "Sign up",
+          have_account: "Already have an account?",
+          login_link: "Log in",
+          email_ph: "your@email.com",
+          pass_ph: "••••••••",
+          confirm_ph: "••••••••",
+          pass_mismatch: "Passwords do not match.",
+          weak_pass: "Password must be at least 6 characters.",
+          created_check_email: "Account created. Please check your email to confirm.",
+        },
+      };
+
+      function applyLanguage(lang) {
+        const safeLang = lang === "en" ? "en" : "fa";
+        localStorage.setItem("lang", safeLang);
+
+        document.documentElement.lang = safeLang;
+        document.documentElement.dir = safeLang === "fa" ? "rtl" : "ltr";
+
+        document.getElementById("lang-fa")?.classList.toggle("active", safeLang === "fa");
+        document.getElementById("lang-en")?.classList.toggle("active", safeLang === "en");
+
+        const t = i18n[safeLang];
+        const setText = (id, value) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = value;
+        };
+
+        setText("signup_title", t.signup_title);
+        setText("signup_subtitle", t.signup_subtitle);
+        setText("email_label", t.email_label);
+        setText("password_label", t.password_label);
+        setText("confirm_password_label", t.confirm_password_label);
+        setText("signup_button", t.signup_button);
+        setText("have_account", t.have_account);
+        setText("login_link", t.login_link);
+
+        const emailInput = document.getElementById("email-input");
+        const passInput = document.getElementById("password-input");
+        const confirmInput = document.getElementById("confirm-password-input");
+        if (emailInput) emailInput.placeholder = t.email_ph;
+        if (passInput) passInput.placeholder = t.pass_ph;
+        if (confirmInput) confirmInput.placeholder = t.confirm_ph;
+      }
+
+      const savedLang = localStorage.getItem("lang") || "fa";
+      applyLanguage(savedLang);
+      document.getElementById("lang-fa")?.addEventListener("click", () => applyLanguage("fa"));
+      document.getElementById("lang-en")?.addEventListener("click", () => applyLanguage("en"));
+
+      // ---------------------------
+      // 2) Supabase signup + redirect
+      // ---------------------------
+      // Paste your actual values here (URL + ANON key)
+      const SUPABASE_URL = "https://biuohuzmtvclqqwsmgkp.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdW9odXptdHZjbHFxd3NtZ2twIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NDcyMDAsImV4cCI6MjA4MDMyMzIwMH0.POOa9mTwFTgOfoXeb1-9DNNbT-QaGla-W-5b6WXO12w";
+
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      function showError(msg) {
+        const box = document.getElementById("error-box");
+        const ok = document.getElementById("success-box");
+        if (ok) { ok.style.display = "none"; ok.textContent = ""; }
+        if (!box) return;
+        box.style.display = "block";
+        box.textContent = msg;
+      }
+
+      function showSuccess(msg) {
+        const box = document.getElementById("error-box");
+        const ok = document.getElementById("success-box");
+        if (box) { box.style.display = "none"; box.textContent = ""; }
+        if (!ok) return;
+        ok.style.display = "block";
+        ok.textContent = msg;
+      }
+
+      function friendlySignupError(error) {
+        const lang = localStorage.getItem("lang") || "fa";
+        const msg = (error?.message || "").toLowerCase();
+
+        if (msg.includes("user already registered") || msg.includes("already")) {
+          return lang === "en"
+            ? "This email is already registered. Try logging in."
+            : "این ایمیل قبلاً ثبت شده است. لطفاً وارد شوید.";
+        }
+
+        if (msg.includes("password")) {
+          return lang === "en"
+            ? "Password is too weak. Try a longer password."
+            : "رمز عبور ضعیف است. یک رمز طولانی‌تر انتخاب کنید.";
+        }
+
+        return lang === "en"
+          ? (error?.message || "Signup failed. Please try again.")
+          : (error?.message || "ثبت نام ناموفق بود. لطفاً دوباره تلاش کنید.");
+      }
+
+      document.getElementById("signup-form")?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const lang = localStorage.getItem("lang") || "fa";
+        const t = i18n[lang === "en" ? "en" : "fa"];
+
+        const email = document.getElementById("email-input")?.value?.trim();
+        const password = document.getElementById("password-input")?.value || "";
+        const confirm = document.getElementById("confirm-password-input")?.value || "";
+
+        if (password.length < 6) {
+          showError(t.weak_pass);
+          return;
+        }
+        if (password !== confirm) {
+          showError(t.pass_mismatch);
+          return;
+        }
+
+        // Optional: If you set an email confirmation redirect URL in Supabase Auth settings,
+        // users will confirm and then land where you want.
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            // Change this to your real deployed domain when ready:
+            // emailRedirectTo: "https://your-domain.vercel.app/dashboard.html"
+          },
+        });
+
+        if (error) {
+          showError(friendlySignupError(error));
+          return;
+        }
+
+        // If email confirmations are OFF, session may exist immediately.
+        if (data?.session) {
+          window.location.href = "dashboard.html";
+          return;
+        }
+
+        // If email confirmations are ON, session is usually null → show message.
+        showSuccess(t.created_check_email);
+      });
+    </script>
+  </body>
 </html>
