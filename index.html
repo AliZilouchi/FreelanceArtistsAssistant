@@ -3,7 +3,15 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <script type="module" src="./js/lang.js"></script> -->
+  <script>
+    // 1. Load saved language (default: fa)
+    const lang = localStorage.getItem("lang") || "fa";
+
+    // 2. Apply language (simple example)
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+  </script>
+
   <script type="module" src="./js/supabase.js"></script>
   <title>Freelance Artists Assistant | دستیار هنرمندان آزاد</title>
   <style>
@@ -536,8 +544,8 @@
       }
     };
 
-    function switchLanguage(lang) {
-      currentLang = lang;
+    function switchLanguage(_lang) {
+      lang = _lang;
       const html = document.documentElement;
       html.setAttribute('lang', lang);
       html.setAttribute('dir', lang === 'fa' ? 'rtl' : 'ltr');
