@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="fa" dir="rtl" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelance Artists Assistant | دستیار هنرمندان آزاد</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;900&family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Vazirmatn', 'Inter', -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    
+    .main-wrapper {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    /* Animated Background */
+    .animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+    
+    .gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 20s infinite ease-in-out;
+    }
+    
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, #d4af37, #8b6914);
+      top: -10%;
+      right: -10%;
+      animation-delay: 0s;
+    }
+    
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #b8860b, #6b5210);
+      bottom: -5%;
+      left: -5%;
+      animation-delay: 5s;
+    }
+    
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, #cd853f, #8b4513);
+      top: 40%;
+      left: 50%;
+      animation-delay: 10s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 30px) scale(0.9); }
+    }
+    
+    /* Persian Pattern Overlay */
+    .pattern-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.08;
+      z-index: 1;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0L61.8 38.2H100L69.1 61.8L80.9 100L50 76.4L19.1 100L30.9 61.8L0 38.2H38.2L50 0Z' fill='%23d4af37' opacity='0.3'/%3E%3Ccircle cx='50' cy='50' r='8' fill='%23d4af37' opacity='0.2'/%3E%3C/svg%3E");
+      background-size: 100px 100px;
+    }
+    
+    /* Content Container */
+    .container {
+      position: relative;
+      z-index: 2;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    
+    /* Language Toggle */
+    .language-toggle {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 0.5rem;
+      border-radius: 50px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+    
+    .lang-btn {
+      padding: 0.5rem 1.25rem;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+    
+    .lang-btn.active {
+      background: linear-gradient(135deg, #d4af37, #b8860b);
+      color: #000;
+    }
+    
+    .lang-btn:hover:not(.active) {
+      color: #d4af37;
+    }
+    
+    /* Logo Section */
+    .logo-section {
+      margin-bottom: 3rem;
+      text-align: center;
+      animation: fadeInDown 1s ease-out;
+    }
+    
+    .logo-graphic {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem;
+      position: relative;
+    }
+    
+    .logo-graphic svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+    }
+    
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, #d4af37, #ffd700, #d4af37);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+    }
+    
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+    
+    /* Hero Content */
+    .hero-content {
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+      animation: fadeInUp 1s ease-out 0.3s both;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #d4af37;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
+    
+    .main-heading {
+      font-size: 4.5rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #ffffff, #d4af37, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% auto;
+    }
+    
+    .description {
+      font-size: 1.25rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 3rem;
+      font-weight: 300;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* Decorative Lines */
+    .decorative-line {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #d4af37, transparent);
+      margin: 2rem auto;
+      position: relative;
+    }
+    
+    .decorative-line::before,
+    .decorative-line::after {
+      content: '';
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #d4af37;
+      border-radius: 50%;
+      top: -2px;
+    }
+    
+    .decorative-line::before { left: -10px; }
+    .decorative-line::after { right: -10px; }
+    
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+    
+    .btn {
+      padding: 1.25rem 3rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      font-family: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .btn span {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #d4af37, #b8860b);
+      color: #000;
+      box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 50px rgba(212, 175, 55, 0.5);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: #d4af37;
+      border: 2px solid #d4af37;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(212, 175, 55, 0.1);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+    }
+    
+    /* Features Preview */
+    .features-preview {
+      margin-top: 5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      max-width: 900px;
+      width: 100%;
+      animation: fadeInUp 1s ease-out 0.6s both;
+    }
+    
+    .feature-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.4s ease;
+    }
+    
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(212, 175, 55, 0.4);
+      transform: translateY(-5px);
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      filter: grayscale(1) brightness(2);
+    }
+    
+    .feature-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #d4af37;
+      margin-bottom: 0.5rem;
+    }
+    
+    .feature-text {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.6;
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .language-toggle {
+        top: 1rem;
+        right: 1rem;
+      }
+      
+      .main-heading {
+        font-size: 2.5rem;
+      }
+      
+      .subtitle {
+        font-size: 0.875rem;
+        letter-spacing: 2px;
+      }
+      
+      .description {
+        font-size: 1rem;
+      }
+      
+      .btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+      }
+      
+      .features-preview {
+        grid-template-columns: 1fr;
+        margin-top: 3rem;
+      }
+    }
+
+    /* RTL/LTR Support */
+    [dir="ltr"] .main-heading,
+    [dir="ltr"] .description,
+    [dir="ltr"] .subtitle {
+      font-family: 'Playfair Display', 'Inter', serif;
+    }
+    
+    [dir="rtl"] .main-heading,
+    [dir="rtl"] .description,
+    [dir="rtl"] .subtitle {
+      font-family: 'Vazirmatn', sans-serif;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body class="h-full"><!-- Animated Background -->
+  <div class="animated-bg">
+   <div class="gradient-orb orb-1"></div>
+   <div class="gradient-orb orb-2"></div>
+   <div class="gradient-orb orb-3"></div>
+  </div>
+  <div class="pattern-overlay"></div>
+  <div class="main-wrapper">
+   <div class="container"><!-- Language Toggle -->
+    <div class="language-toggle"><button class="lang-btn active" data-lang="fa" id="btn-fa">فارسی</button> <button class="lang-btn" data-lang="en" id="btn-en">English</button>
+    </div><!-- Logo Section -->
+    <div class="logo-section">
+     <div class="logo-graphic"><img src="/assets/logo.svg" alt="Honarapp Logo" id="logo-img" onerror="this.style.display='none'; this.alt='Logo failed to load';" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));">
+     </div>
+     <div class="logo-text" id="logo-text">
+      HONARAPP
+     </div>
+    </div><!-- Hero Content -->
+    <div class="hero-content">
+     <div class="subtitle" id="subtitle">
+      — برای هنرمندان آزاد —
+     </div>
+     <h1 class="main-heading" id="main-heading">دستیار حرفه‌ای کسب و کار هنری شما</h1>
+     <div class="decorative-line"></div>
+     <p class="description" id="description">مدیریت پروژه‌ها، مشتریان، مالی و قراردادها در یک پلتفرم یکپارچه. با ابزارهای هوشمند و رابط کاربری زیبا، تمرکز خود را روی هنر بگذارید.</p>
+     <div class="button-group"><button class="btn btn-primary" id="signup-btn"> <span>شروع رایگان</span> </button> <button class="btn btn-secondary" id="login-btn"> <span>ورود به حساب</span> </button>
+     </div>
+    </div><!-- Features Preview -->
+    <div class="features-preview">
+     <div class="feature-card">
+      <div class="feature-icon">
+       📊
+      </div>
+      <div class="feature-title" id="feature-1-title">
+       مدیریت پروژه
+      </div>
+      <div class="feature-text" id="feature-1-text">
+       ردیابی پروژه‌ها و ددلاین‌ها
+      </div>
+     </div>
+     <div class="feature-card">
+      <div class="feature-icon">
+       💰
+      </div>
+      <div class="feature-title" id="feature-2-title">
+       مالی هوشمند
+      </div>
+      <div class="feature-text" id="feature-2-text">
+       صورتحساب و پیگیری درآمد
+      </div>
+     </div>
+     <div class="feature-card">
+      <div class="feature-icon">
+       👥
+      </div>
+      <div class="feature-title" id="feature-3-title">
+       مدیریت مشتری
+      </div>
+      <div class="feature-text" id="feature-3-text">
+       سازماندهی اطلاعات مشتریان
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: '#0a0a0a',
+      surface_color: '#ffffff',
+      text_color: '#ffffff',
+      primary_action_color: '#d4af37',
+      secondary_action_color: '#d4af37',
+      font_family: 'Vazirmatn',
+      font_size: 16,
+      main_heading_fa: 'دستیار حرفه‌ای کسب و کار هنری شما',
+      main_heading_en: 'Your Professional Art Business Assistant',
+      subtitle_fa: '— برای هنرمندان آزاد —',
+      subtitle_en: '— For Freelance Artists —',
+      description_fa: 'مدیریت پروژه‌ها، مشتریان، مالی و قراردادها در یک پلتفرم یکپارچه. با ابزارهای هوشمند و رابط کاربری زیبا، تمرکز خود را روی هنر بگذارید.',
+      description_en: 'Manage projects, clients, finances, and contracts in one unified platform. With intelligent tools and beautiful interface, focus on your art.',
+      signup_button_fa: 'شروع رایگان',
+      signup_button_en: 'Start Free',
+      login_button_fa: 'ورود به حساب',
+      login_button_en: 'Login'
+    };
+
+    let currentLang = 'fa';
+
+    async function onConfigChange(config) {
+      const baseFontStack = '-apple-system, BlinkMacSystemFont, sans-serif';
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+      
+      document.body.style.background = bgColor;
+      
+      const subtitle = document.getElementById('subtitle');
+      subtitle.style.color = primaryColor;
+      subtitle.style.fontFamily = `${customFont}, ${baseFontStack}`;
+      subtitle.style.fontSize = `${baseSize * 1}px`;
+      
+      const mainHeading = document.getElementById('main-heading');
+      mainHeading.style.fontFamily = `${customFont}, ${baseFontStack}`;
+      mainHeading.style.fontSize = `${baseSize * 4.5}px`;
+      
+      const description = document.getElementById('description');
+      description.style.color = `${textColor}b3`;
+      description.style.fontFamily = `${customFont}, ${baseFontStack}`;
+      description.style.fontSize = `${baseSize * 1.25}px`;
+      
+      const signupBtn = document.getElementById('signup-btn');
+      signupBtn.style.background = `linear-gradient(135deg, ${primaryColor}, ${adjustColor(primaryColor, -20)})`;
+      signupBtn.style.fontFamily = `${customFont}, ${baseFontStack}`;
+      signupBtn.style.fontSize = `${baseSize * 1.125}px`;
+      
+      const loginBtn = document.getElementById('login-btn');
+      loginBtn.style.color = secondaryColor;
+      loginBtn.style.borderColor = secondaryColor;
+      loginBtn.style.fontFamily = `${customFont}, ${baseFontStack}`;
+      loginBtn.style.fontSize = `${baseSize * 1.125}px`;
+
+      updateContent();
+    }
+
+    function adjustColor(color, amount) {
+      const num = parseInt(color.replace('#', ''), 16);
+      const r = Math.max(0, Math.min(255, (num >> 16) + amount));
+      const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amount));
+      const b = Math.max(0, Math.min(255, (num & 0x0000FF) + amount));
+      return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => {
+              config.primary_action_color = value;
+              window.elementSdk.setConfig({ primary_action_color: value });
+            }
+          },
+          {
+            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => {
+              config.secondary_action_color = value;
+              window.elementSdk.setConfig({ secondary_action_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => {
+            config.font_family = value;
+            window.elementSdk.setConfig({ font_family: value });
+          }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => {
+            config.font_size = value;
+            window.elementSdk.setConfig({ font_size: value });
+          }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['main_heading_fa', config.main_heading_fa || defaultConfig.main_heading_fa],
+        ['main_heading_en', config.main_heading_en || defaultConfig.main_heading_en],
+        ['subtitle_fa', config.subtitle_fa || defaultConfig.subtitle_fa],
+        ['subtitle_en', config.subtitle_en || defaultConfig.subtitle_en],
+        ['description_fa', config.description_fa || defaultConfig.description_fa],
+        ['description_en', config.description_en || defaultConfig.description_en],
+        ['signup_button_fa', config.signup_button_fa || defaultConfig.signup_button_fa],
+        ['signup_button_en', config.signup_button_en || defaultConfig.signup_button_en],
+        ['login_button_fa', config.login_button_fa || defaultConfig.login_button_fa],
+        ['login_button_en', config.login_button_en || defaultConfig.login_button_en]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    document.getElementById('btn-fa').addEventListener('click', () => switchLanguage('fa'));
+    document.getElementById('btn-en').addEventListener('click', () => switchLanguage('en'));
+
+    document.getElementById('signup-btn').addEventListener('click', () => {
+      console.log('Sign up clicked');
+    });
+
+    document.getElementById('login-btn').addEventListener('click', () => {
+      console.log('Login clicked');
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ae4178f05afdcc9',t:'MTc2NTc4MjMyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script src="js/supabase.js"></script>
+ <script src="js/lang.js"></script>
+ </html>
