@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login | Honarapp</title>
+    <title>Login</title>
 
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
@@ -504,6 +504,36 @@
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdW9odXptdHZjbHFxd3NtZ2twIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NDcyMDAsImV4cCI6MjA4MDMyMzIwMH0.POOa9mTwFTgOfoXeb1-9DNNbT-QaGla-W-5b6WXO12w";
 
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      function friendlyAuthError(error) {
+        const lang = localStorage.getItem("lang") || "fa";
+
+        // Most common wrong login case
+        const invalid =
+          error?.code === "invalid_credentials" ||
+          (error?.message || "").toLowerCase().includes("invalid login credentials");
+
+        if (invalid) {
+          return lang === "en"
+            ? "Email or password is incorrect. Please try again."
+            : "ایمیل یا رمز عبور اشتباه است. لطفاً دوباره تلاش کنید.";
+        }
+
+        // rate limit / too many tries (message varies, so we pattern-match)
+        const rateLimited =
+          (error?.message || "").toLowerCase().includes("rate limit") ||
+          (error?.message || "").toLowerCase().includes("too many");
+
+        if (rateLimited) {
+          return lang === "en"
+            ? "Too many attempts. Please wait a bit and try again."
+            : "تعداد تلاش‌ها زیاد شده. لطفاً کمی صبر کنید و دوباره امتحان کنید.";
+        }
+
+        // fallback
+        return lang === "en"
+          ? (error?.message || "Login failed. Please try again.")
+          : (error?.message || "ورود ناموفق بود. لطفاً دوباره تلاش کنید.");
+      }
 
       function showError(msg) {
         const box = document.getElementById("error-box");
@@ -534,7 +564,7 @@
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
-          showError(error.message);
+          showError(friendlyAuthError(error.message));
           return;
         }
 
