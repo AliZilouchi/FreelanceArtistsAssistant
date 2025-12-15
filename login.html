@@ -1,40 +1,361 @@
-<!DOCTYPE html>
-<html>
-<head>
+<!doctype html>
+<html lang="fa" dir="rtl">
+ <head>
   <meta charset="UTF-8">
-  <title>Artist Manager – Login</title>
-</head>
-<body>
-
-<h2>Login</h2>
-<input id="email" placeholder="Email">
-<input id="password" placeholder="Password" type="password">
-<button onclick="login()">Login</button>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const supabase = window.supabase.createClient(
-//   "postgresql://postgres:[Abbas.10]@db.biuohuzmtvclqqwsmgkp.supabase.co:5432/postgres",
-    "https://biuohuzmtvclqqwsmgkp.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdW9odXptdHZjbHFxd3NtZ2twIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NDcyMDAsImV4cCI6MjA4MDMyMzIwMH0.POOa9mTwFTgOfoXeb1-9DNNbT-QaGla-W-5b6WXO12w"
-);
-
-async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if (error) {
-    alert(error.message);
-  } else {
-    window.location.href = "dashboard.html";
-  }
-}
-</script>
-
-</body>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Honarapp</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      height: 100%;
+    }
+    
+    body {
+      height: 100%;
+      font-family: 'Vazirmatn', 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1a1410 0%, #0a0a0a 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    
+    [dir="ltr"] body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .page-wrapper {
+      width: 100%;
+      max-width: 440px;
+    }
+    
+    .language-toggle {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .lang-button {
+      background: transparent;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+    
+    .lang-button:hover {
+      border-color: rgba(212, 175, 55, 0.6);
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .lang-button.active {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: #d4af37;
+      color: #d4af37;
+    }
+    
+    .login-container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .logo-section {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    
+    .logo-image {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1rem;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    
+    .logo-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #d4af37;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-align: center;
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
+    
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .form-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: #d4af37;
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    }
+    
+    .form-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .form-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #d4af37;
+    }
+    
+    .checkbox-label {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+    }
+    
+    .forgot-link {
+      font-size: 0.875rem;
+      color: #d4af37;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .forgot-link:hover {
+      color: #ffd700;
+    }
+    
+    .submit-button {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #d4af37, #b8860b);
+      border: none;
+      border-radius: 8px;
+      color: #000000;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      margin-top: 1rem;
+    }
+    
+    .submit-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+    }
+    
+    .submit-button:active {
+      transform: translateY(0);
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(212, 175, 55, 0.2);
+    }
+    
+    .divider-text {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .social-login {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .social-button {
+      width: 100%;
+      padding: 0.875rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+    
+    .social-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(212, 175, 55, 0.4);
+    }
+    
+    .signup-section {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+    }
+    
+    .signup-text {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .signup-link {
+      color: #d4af37;
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 0.25rem;
+      transition: color 0.3s ease;
+    }
+    
+    [dir="ltr"] .signup-link {
+      margin-left: 0;
+      margin-right: 0.25rem;
+    }
+    
+    .signup-link:hover {
+      color: #ffd700;
+    }
+    
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .login-container {
+        padding: 2rem 1.5rem;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+      }
+      
+      .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="page-wrapper">
+   <div class="language-toggle"><button class="lang-button active" data-lang="fa" id="lang-fa">فارسی</button> <button class="lang-button" data-lang="en" id="lang-en">English</button>
+   </div>
+   <main class="login-container">
+    <header class="logo-section">
+     <div class="logo-image">
+      🎨
+     </div>
+     <h1 class="logo-title">HONARAPP</h1>
+    </header>
+    <section>
+     <h2 class="page-title" data-i18n="login_title">ورود به حساب کاربری</h2>
+     <p class="page-subtitle" data-i18n="login_subtitle">به دستیار هنری خود خوش آمدید</p>
+     <form class="login-form" id="login-form">
+      <div class="form-group"><label for="email-input" class="form-label" data-i18n="email_label">ایمیل</label> <input type="email" id="email-input" name="email" class="form-input" placeholder="your@email.com" data-i18n-placeholder="email_placeholder" required>
+      </div>
+      <div class="form-group"><label for="password-input" class="form-label" data-i18n="password_label">رمز عبور</label> <input type="password" id="password-input" name="password" class="form-input" placeholder="••••••••" data-i18n-placeholder="password_placeholder" required>
+      </div>
+      <div class="form-row">
+       <div class="checkbox-group"><input type="checkbox" id="remember-checkbox" name="remember" class="form-checkbox"> <label for="remember-checkbox" class="checkbox-label" data-i18n="remember_me">مرا به خاطر بسپار</label>
+       </div><a href="#forgot" class="forgot-link" id="forgot-link" data-i18n="forgot_password">فراموشی رمز عبور؟</a>
+      </div><button type="submit" class="submit-button" id="login-btn" data-i18n="login_button">ورود</button>
+     </form>
+     <div class="divider">
+      <div class="divider-line"></div><span class="divider-text" data-i18n="or">یا</span>
+      <div class="divider-line"></div>
+     </div>
+     <div class="social-login"><button class="social-button" id="google-login-btn" data-i18n="google_login"> <span>🔍</span> <span>ورود با Google</span> </button> <button class="social-button" id="apple-login-btn" data-i18n="apple_login"> <span>🍎</span> <span>ورود با Apple</span> </button>
+     </div>
+    </section>
+    <footer class="signup-section"><span class="signup-text" data-i18n="no_account">حساب کاربری ندارید؟</span> <a href="#signup" class="signup-link" id="signup-link" data-i18n="signup_link">ثبت نام کنید</a>
+    </footer>
+   </main>
+  </div>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ae4df1ce15b9250',t:'MTc2NTc5MDQ5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

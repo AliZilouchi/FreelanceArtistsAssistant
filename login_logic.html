@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Artist Manager – Login</title>
+</head>
+<body>
+
+<h2>Login</h2>
+<input id="email" placeholder="Email">
+<input id="password" placeholder="Password" type="password">
+<button onclick="login()">Login</button>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabase = window.supabase.createClient(
+//   "postgresql://postgres:[Abbas.10]@db.biuohuzmtvclqqwsmgkp.supabase.co:5432/postgres",
+    "https://biuohuzmtvclqqwsmgkp.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdW9odXptdHZjbHFxd3NtZ2twIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NDcyMDAsImV4cCI6MjA4MDMyMzIwMH0.POOa9mTwFTgOfoXeb1-9DNNbT-QaGla-W-5b6WXO12w"
+);
+
+async function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    alert(error.message);
+  } else {
+    window.location.href = "dashboard.html";
+  }
+}
+</script>
+
+</body>
+</html>
