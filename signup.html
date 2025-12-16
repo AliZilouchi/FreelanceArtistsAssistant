@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Signup | Honarapp</title>
+    <title>Signup</title>
 
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
@@ -263,7 +263,7 @@
           confirm_ph: "••••••••",
           pass_mismatch: "رمز عبور و تکرار آن یکسان نیست.",
           weak_pass: "رمز عبور باید حداقل 6 کاراکتر باشد.",
-          created_check_email: "حساب ساخته شد. لطفاً ایمیل خود را برای تایید بررسی کنید.",
+          created_check_email: "حساب ساخته شد. لطفاً ایمیل خود را برای تایید بررسی کنید و پس از تایید، از صفحه ورود وارد شوید.",
         },
         en: {
           signup_title: "Create an account",
@@ -399,9 +399,9 @@
           },
         });
 
-        console.log("SIGNUP data:", data);
-        console.log("SIGNUP error:", error);
-        if (error) alert(`${error.message}\nstatus: ${error.status}\ncode: ${error.code ?? "n/a"}`);
+        // console.log("SIGNUP data:", data);
+        // console.log("SIGNUP error:", error);
+        // if (error) alert(`${error.message}\nstatus: ${error.status}\ncode: ${error.code ?? "n/a"}`);
 
 
         if (error) {
