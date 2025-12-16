@@ -399,6 +399,11 @@
           },
         });
 
+        console.log("SIGNUP data:", data);
+        console.log("SIGNUP error:", error);
+        if (error) alert(`${error.message}\nstatus: ${error.status}\ncode: ${error.code ?? "n/a"}`);
+
+
         if (error) {
           showError(friendlySignupError(error));
           return;
