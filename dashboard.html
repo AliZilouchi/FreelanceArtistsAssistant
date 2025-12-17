@@ -546,25 +546,15 @@
       // -----------------------
       // Supabase init (public env)
       // -----------------------
-      async function loadPublicEnv() {
-        // Assumes you created a Vercel route /api/public-env that returns:
-        // { "SUPABASE_URL": "...", "SUPABASE_ANON_KEY": "..." }
-        const res = await fetch("/api/public-env", { cache: "no-store" });
-        if (!res.ok) throw new Error("Missing /api/public-env (or it returned an error).");
-        return await res.json();
+      function getSupabaseClientOrThrow() {
+        const c = window.supabaseClient;
+        if (!c) {
+          throw new Error("supabaseClient not found. Make sure you loaded: supabase.min.js -> ./js/supabase.js -> ./js/guard.js before dashboard script.");
+        }
+        return c;
       }
 
       let supabase = null;
-
-      async function initSupabase() {
-        const env = await loadPublicEnv();
-        const url = env.SUPABASE_URL;
-        const key = env.SUPABASE_ANON_KEY;
-
-        if (!url || !key) throw new Error("SUPABASE_URL / SUPABASE_ANON_KEY missing from /api/public-env response.");
-
-        supabase = window.supabase.createClient(url, key);
-      }
 
       async function requireSessionOrRedirect() {
         const { data } = await supabase.auth.getSession();
@@ -849,24 +839,20 @@
       // -----------------------
       (async function boot() {
         try {
-          await initSupabase();
-          const session = await requireSessionOrRedirect();
-          if (!session) return;
+          const supabase = getSupabaseClientOrThrow();
 
-          await loadProfile();
-          await loadMetrics();
-          await loadSeriesChart();
-          await loadArtifactStrips();
+          // guard.js already redirects if not logged in, but you can keep this check too:
+          const { data } = await supabase.auth.getSession();
+          if (!data.session) return;
 
-          // Re-render chart labels if language changes
-          const oldApplyLang = applyLang;
-          applyLang = function (lang) {
-            oldApplyLang(lang);
-            loadSeriesChart().catch(console.error);
-          };
+          // Now replace any `supabase` references below with this local `supabase`
+          await loadProfile(supabase);
+          await loadMetrics(supabase);
+          await loadSeriesChart(supabase);
+          await loadArtifactStrips(supabase);
+
         } catch (e) {
           console.error("[dashboard boot]", e);
-          // If env is missing, show a simple hint
           document.getElementById("profile-name").textContent = "Config error";
         }
       })();
