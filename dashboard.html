@@ -813,8 +813,8 @@
             .select("id,title,main_image,status,created_at")
             .eq("user_id", user.id)
             .eq("status", status)
-            .order("created_at", { ascending: false })
-            .limit(12);
+            .order("created_at", { ascending: false });
+            // .limit(12);
         }
 
         const [inProg, ready, sent] = await Promise.all([
