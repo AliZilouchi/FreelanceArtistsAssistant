@@ -846,10 +846,10 @@
           if (!data.session) return;
 
           // Now replace any `supabase` references below with this local `supabase`
-          await loadProfile(supabase);
-          await loadMetrics(supabase);
-          await loadSeriesChart(supabase);
-          await loadArtifactStrips(supabase);
+          await loadProfile(supabaseClient);
+          await loadMetrics(supabaseClient);
+          await loadSeriesChart(supabaseClient);
+          await loadArtifactStrips(supabaseClient);
 
         } catch (e) {
           console.error("[dashboard boot]", e);
