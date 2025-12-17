@@ -699,11 +699,13 @@
               {
                 label: lang === "fa" ? "آثار (تجمعی)" : "Works (cumulative)",
                 data: worksCum,
+                yAxisID: "yWorks",
                 tension: 0.35,
               },
               {
                 label: lang === "fa" ? "درآمد (تجمعی)" : "Income (cumulative)",
                 data: moneyCum,
+                yAxisID: "yMoney",
                 tension: 0.35,
               },
             ],
@@ -720,15 +722,35 @@
                   label: (ctx) => {
                     const label = ctx.dataset.label || "";
                     const val = ctx.parsed.y;
-                    if (label.includes("Income") || label.includes("درآمد")) return `${label}: ${formatMoney(val)}`;
+                    if (ctx.dataset.yAxisID === "yMoney") return `${label}: ${formatMoney(val)}`;
                     return `${label}: ${formatNumber(val)}`;
                   },
                 },
               },
             },
             scales: {
-              x: { ticks: { color: "rgba(255,255,255,0.65)" }, grid: { color: "rgba(255,255,255,0.06)" } },
-              y: { ticks: { color: "rgba(255,255,255,0.65)" }, grid: { color: "rgba(255,255,255,0.06)" } },
+              x: {
+                ticks: { color: "rgba(255,255,255,0.65)" },
+                grid: { color: "rgba(255,255,255,0.06)" },
+              },
+              yWorks: {
+                position: "left",
+                ticks: {
+                  color: "rgba(255,255,255,0.65)",
+                  callback: (v) => formatNumber(v),
+                },
+                grid: { color: "rgba(255,255,255,0.06)" },
+              },
+              yMoney: {
+                position: "right",
+                ticks: {
+                  color: "rgba(255,255,255,0.65)",
+                  callback: (v) => formatMoney(v),
+                },
+                grid: {
+                  drawOnChartArea: false, // keeps it cleaner
+                },
+              },
             },
           },
         });
