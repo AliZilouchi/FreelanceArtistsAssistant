@@ -1,0 +1,32 @@
+Now let's move to sales and gallery_movements edge functions:
+Columns for Sales:
+1. id, 2. user_id, 3. artifact_id 4. created_at
+(These ones are pretty obvious and similar to other situations and tables, Obviously these can not be null and should be set automatically by ourselves)
+5. amount
+(This can't be null and is set by user) 
+6. buyer_name, 7. notes,
+(These can be null and is set by user) 
+8. gallery_id, 9.sold_channel
+Columns for Gallery movements:
+1. id, 2. user_id, 3. artifact_id 4. created_at
+(These ones are pretty obvious and similar to other situations and tables, Obviously these can not be null and should be set automatically by ourselves)
+5. movement_type
+(This can't be null and is set by user but not directly instead it set based on which functions that user call)
+6. gallery_name, 7. notes
+(These can be null and is set by user) 
+Scenarios:
+We already told that user should be able to record sale and gallery_movements here I explain the exact scenarios:
+1. User should be able to give two main types of reciepts for artifacts with status "ready" one is reciept for sale and the other for gallery
+- Sale:
+In this type user selects some of "ready" artifacts and per each of them should determine amount and optionally set note per each,
+there's an optional buyer name for whole reciept and this kind of sales channel are going to be considered "direct" since artifacts weren't sent to gallery from the first.
+After the reciept is commited all the bulk of sales should be added to sales.
+- Gallery movements:
+In this type user selects some of "ready" artifacts and optionally set note per each,
+there's an optional gallery name for whole reciept and type of all gallery_movements would be "sent" obviously.
+After the reciept is commited all the bulk of movements should be added to gallery movements.
+2. Besides the reciept there's no way to commit sending to gallery or direct sales so the sold artifacts obviously won't need change and all; but the artifacts sent to gallery have two options (unlike the last part which should be able to done bulky this part should be handle one by one):
+First it could be sold in gallery, so there should be a sale record with automatic gallery_id, buyer_name, sold_channel from there and uer just set the amount and note of that sale.
+Second it could be returned which should add a gallery_movements record with type returned and again notes could be added by user
+
+Give me your opinion and then edge functios needed

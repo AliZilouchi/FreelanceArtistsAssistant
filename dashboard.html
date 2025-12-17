@@ -1,44 +1,883 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
-</head>
-<body>
+<!doctype html>
+<html lang="fa" dir="rtl" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | Honarapp</title>
 
-<h2>Dashboard</h2>
-<button onclick="logout()">Logout</button>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
 
-<div id="stats"></div>
+      body {
+        box-sizing: border-box;
+      }
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const supabase = window.supabase.createClient(
-  "https://biuohuzmtvclqqwsmgkp.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdW9odXptdHZjbHFxd3NtZ2twIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NDcyMDAsImV4cCI6MjA4MDMyMzIwMH0.POOa9mTwFTgOfoXeb1-9DNNbT-QaGla-W-5b6WXO12w"
-);
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-async function loadStats() {
-  const { data: artworks } = await supabase
-    .from("artifacts")
-    .select("*");
+      html,
+      body {
+        height: 100%;
+        font-family: "Vazirmatn", "Inter", sans-serif;
+      }
 
-  const total = artworks.length;
-  
-  document.getElementById("stats").innerHTML = `
-      <p>Total Artworks: ${total}</p>
-      <a href="artifacts.html">View Artifacts</a><br>
-      <a href="artifact-add.html">Add New Artifact</a>
-  `;
-}
+      body {
+        background: linear-gradient(135deg, #1a1410 0%, #0a0a0a 100%);
+        color: #ffffff;
+      }
 
-async function logout() {
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
+      [dir="ltr"] body {
+        font-family: "Inter", sans-serif;
+      }
 
-loadStats();
-</script>
+      .dashboard-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        padding: 1.5rem;
+      }
 
-</body>
+      .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .profile-box {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .profile-avatar {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+
+      .profile-name {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .language-toggle {
+        display: flex;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem;
+        border-radius: 50px;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+      }
+
+      .lang-btn {
+        padding: 0.5rem 1.25rem;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      .lang-btn.active {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+      }
+
+      .main-dashboard-box {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(212, 175, 55, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+      }
+
+      .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #d4af37;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 500;
+      }
+
+      .chart-container {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(212, 175, 55, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        height: 250px;
+        position: relative;
+      }
+
+      .chart-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 1rem;
+      }
+
+      .artifact-strip {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .strip-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .strip-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #d4af37;
+      }
+
+      .strip-count {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.6);
+        background: rgba(212, 175, 55, 0.1);
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+      }
+
+      .artifact-list {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+      }
+
+      .artifact-list::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      .artifact-list::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
+      }
+
+      .artifact-list::-webkit-scrollbar-thumb {
+        background: rgba(212, 175, 55, 0.3);
+        border-radius: 3px;
+      }
+
+      .artifact-list::-webkit-scrollbar-thumb:hover {
+        background: rgba(212, 175, 55, 0.5);
+      }
+
+      .artifact-card {
+        flex: 0 0 140px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(212, 175, 55, 0.15);
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .artifact-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(212, 175, 55, 0.4);
+      }
+
+      .artifact-image {
+        width: 100%;
+        height: 120px;
+        background: linear-gradient(
+          135deg,
+          rgba(212, 175, 55, 0.2),
+          rgba(184, 134, 11, 0.2)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        overflow: hidden;
+      }
+
+      .artifact-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .artifact-title {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .action-btn {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 12px;
+        padding: 1.25rem;
+        color: #ffffff;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .action-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(212, 175, 55, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .action-btn-icon {
+        font-size: 2rem;
+      }
+
+      .action-btn.primary {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+        border: none;
+      }
+
+      .action-btn.primary:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+      }
+
+      .tiny-muted {
+        margin-top: 0.75rem;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.55);
+      }
+
+      @media (max-width: 768px) {
+        .dashboard-wrapper {
+          padding: 1rem;
+        }
+
+        .dashboard-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+        }
+
+        .main-dashboard-box {
+          padding: 1.5rem;
+        }
+
+        .stat-card {
+          padding: 1rem;
+        }
+
+        .stat-value {
+          font-size: 1.5rem;
+        }
+
+        .chart-container {
+          height: 200px;
+        }
+
+        .action-buttons {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="h-full">
+    <div class="dashboard-wrapper">
+      <div class="dashboard-container">
+        <header class="top-bar">
+          <div class="profile-box">
+            <div class="profile-avatar" id="profile-avatar">👤</div>
+            <div class="profile-name" id="profile-name">...</div>
+          </div>
+
+          <div class="language-toggle">
+            <button class="lang-btn" data-lang="fa" id="btn-fa">فارسی</button>
+            <button class="lang-btn" data-lang="en" id="btn-en">English</button>
+          </div>
+        </header>
+
+        <main>
+          <section class="main-dashboard-box">
+            <div class="dashboard-grid">
+              <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" id="total-sales-value">—</div>
+                <div class="stat-label" id="total-sales-label">فروش کل</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">🎨</div>
+                <div class="stat-value" id="total-artifacts-value">—</div>
+                <div class="stat-label" id="total-artifacts-label">تعداد آثار</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="ready-count-value">—</div>
+                <div class="stat-label" id="ready-count-label">آماده</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-value" id="sent-count-value">—</div>
+                <div class="stat-label" id="sent-count-label">ارسال شده</div>
+              </div>
+            </div>
+
+            <div class="chart-container">
+              <div class="chart-title" id="chart-title">آمار 6 ماه اخیر</div>
+              <canvas id="dashChart" height="150"></canvas>
+              <div class="tiny-muted" id="chart-hint"></div>
+            </div>
+          </section>
+
+          <section class="artifact-strip">
+            <div class="strip-header">
+              <h2 class="strip-title" id="in-progress-title">در حال انجام</h2>
+              <span class="strip-count" id="in-progress-count">—</span>
+            </div>
+            <div class="artifact-list" id="in-progress-list"></div>
+          </section>
+
+          <section class="artifact-strip">
+            <div class="strip-header">
+              <h2 class="strip-title" id="ready-title">آماده</h2>
+              <span class="strip-count" id="ready-count">—</span>
+            </div>
+            <div class="artifact-list" id="ready-list"></div>
+          </section>
+
+          <section class="artifact-strip">
+            <div class="strip-header">
+              <h2 class="strip-title" id="sent-title">ارسال شده به گالری</h2>
+              <span class="strip-count" id="sent-count">—</span>
+            </div>
+            <div class="artifact-list" id="sent-list"></div>
+          </section>
+
+          <section class="action-buttons">
+            <button class="action-btn primary" id="add-artifact-btn">
+              <span class="action-btn-icon">➕</span>
+              <span id="add-artifact-text">افزودن اثر جدید</span>
+            </button>
+
+            <button class="action-btn" id="gallery-summary-btn">
+              <span class="action-btn-icon">📊</span>
+              <span id="gallery-summary-text">خلاصه گالری</span>
+            </button>
+
+            <button class="action-btn" id="sales-history-btn">
+              <span class="action-btn-icon">💵</span>
+              <span id="sales-history-text">تاریخچه فروش</span>
+            </button>
+
+            <button class="action-btn" id="receipts-history-btn">
+              <span class="action-btn-icon">🧾</span>
+              <span id="receipts-history-text">تاریخچه رسیدها</span>
+            </button>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Supabase UMD -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <script>
+      // -----------------------
+      // Language (localStorage)
+      // -----------------------
+      const I18N = {
+        fa: {
+          total_sales: "فروش کل",
+          total_artifacts: "تعداد آثار",
+          ready: "آماده",
+          sent: "ارسال شده",
+          chart_title: "آمار 6 ماه اخیر",
+          chart_hint: "دو نمودار: آثار اضافه‌شده (تجمعی) و درآمد فروش (تجمعی)",
+          in_progress: "در حال انجام",
+          ready_title: "آماده",
+          sent_title: "ارسال شده به گالری",
+          add_artifact: "افزودن اثر جدید",
+          gallery_summary: "خلاصه گالری",
+          sales_history: "تاریخچه فروش",
+          receipts_history: "تاریخچه رسیدها",
+          empty_strip: "هنوز چیزی اینجا نیست ✨",
+        },
+        en: {
+          total_sales: "Total Sales",
+          total_artifacts: "Total Artifacts",
+          ready: "Ready",
+          sent: "Sent to Gallery",
+          chart_title: "Last 6 Months Stats",
+          chart_hint: "Two lines: cumulative works added and cumulative sales income",
+          in_progress: "In Progress",
+          ready_title: "Ready",
+          sent_title: "Sent to Gallery",
+          add_artifact: "Add Artifact",
+          gallery_summary: "Gallery Summary",
+          sales_history: "Sales History",
+          receipts_history: "Receipts History",
+          empty_strip: "Nothing here yet ✨",
+        },
+      };
+
+      function getLang() {
+        const v = localStorage.getItem("lang");
+        return v === "en" ? "en" : "fa";
+      }
+
+      function applyLang(lang) {
+        const safe = lang === "en" ? "en" : "fa";
+        localStorage.setItem("lang", safe);
+
+        document.documentElement.lang = safe;
+        document.documentElement.dir = safe === "fa" ? "rtl" : "ltr";
+
+        document.getElementById("btn-fa").classList.toggle("active", safe === "fa");
+        document.getElementById("btn-en").classList.toggle("active", safe === "en");
+
+        const t = I18N[safe];
+        document.getElementById("total-sales-label").textContent = t.total_sales;
+        document.getElementById("total-artifacts-label").textContent = t.total_artifacts;
+        document.getElementById("ready-count-label").textContent = t.ready;
+        document.getElementById("sent-count-label").textContent = t.sent;
+
+        document.getElementById("chart-title").textContent = t.chart_title;
+        document.getElementById("chart-hint").textContent = t.chart_hint;
+
+        document.getElementById("in-progress-title").textContent = t.in_progress;
+        document.getElementById("ready-title").textContent = t.ready_title;
+        document.getElementById("sent-title").textContent = t.sent_title;
+
+        document.getElementById("add-artifact-text").textContent = t.add_artifact;
+        document.getElementById("gallery-summary-text").textContent = t.gallery_summary;
+        document.getElementById("sales-history-text").textContent = t.sales_history;
+        document.getElementById("receipts-history-text").textContent = t.receipts_history;
+      }
+
+      document.getElementById("btn-fa").addEventListener("click", () => applyLang("fa"));
+      document.getElementById("btn-en").addEventListener("click", () => applyLang("en"));
+      applyLang(getLang());
+
+      // -----------------------
+      // Supabase init (public env)
+      // -----------------------
+      async function loadPublicEnv() {
+        // Assumes you created a Vercel route /api/public-env that returns:
+        // { "SUPABASE_URL": "...", "SUPABASE_ANON_KEY": "..." }
+        const res = await fetch("/api/public-env", { cache: "no-store" });
+        if (!res.ok) throw new Error("Missing /api/public-env (or it returned an error).");
+        return await res.json();
+      }
+
+      let supabase = null;
+
+      async function initSupabase() {
+        const env = await loadPublicEnv();
+        const url = env.SUPABASE_URL;
+        const key = env.SUPABASE_ANON_KEY;
+
+        if (!url || !key) throw new Error("SUPABASE_URL / SUPABASE_ANON_KEY missing from /api/public-env response.");
+
+        supabase = window.supabase.createClient(url, key);
+      }
+
+      async function requireSessionOrRedirect() {
+        const { data } = await supabase.auth.getSession();
+        if (!data.session) {
+          window.location.href = "login.html";
+          return null;
+        }
+        return data.session;
+      }
+
+      // -----------------------
+      // Formatting helpers
+      // -----------------------
+      function formatNumber(n) {
+        const lang = getLang();
+        const locale = lang === "fa" ? "fa-IR" : "en-GB";
+        return new Intl.NumberFormat(locale).format(Number(n || 0));
+      }
+
+      // Change this later if you add a currency setting in users table.
+      function formatMoney(n) {
+        // MVP assumption: single currency symbol for UI only.
+        const symbol = localStorage.getItem("currencySymbol") || "$";
+        return symbol + formatNumber(n);
+      }
+
+      // -----------------------
+      // Images (main_image)
+      // -----------------------
+      const STORAGE_BUCKET = localStorage.getItem("storageBucket") || "artifacts";
+
+      function resolveMainImageUrl(path) {
+        if (!path) return null;
+        const p = String(path);
+        if (p.startsWith("http://") || p.startsWith("https://")) return p;
+        // assumes main_image stores a Storage path
+        try {
+          const out = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(p);
+          return out?.data?.publicUrl || null;
+        } catch {
+          return null;
+        }
+      }
+
+      function pickEmojiForStatus(status) {
+        if (status === "in_progress") return "🎨";
+        if (status === "ready") return "✅";
+        if (status === "sent_to_gallery") return "📦";
+        return "🖼️";
+      }
+
+      // -----------------------
+      // Data loaders
+      // -----------------------
+      async function loadProfile() {
+        const { data: u } = await supabase.auth.getUser();
+        const user = u.user;
+        if (!user) return;
+
+        const { data: profile } = await supabase
+          .from("users")
+          .select("name, profile_image")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        const name = profile?.name || user.email || "—";
+        document.getElementById("profile-name").textContent = name;
+
+        // Optional profile image (if you store full URL in users.profile_image)
+        if (profile?.profile_image) {
+          const avatar = document.getElementById("profile-avatar");
+          avatar.textContent = "";
+          const img = document.createElement("img");
+          img.src = profile.profile_image;
+          img.alt = "avatar";
+          img.style.width = "100%";
+          img.style.height = "100%";
+          img.style.objectFit = "cover";
+          avatar.appendChild(img);
+        }
+      }
+
+      async function loadMetrics() {
+        const { data: u } = await supabase.auth.getUser();
+        const user = u.user;
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from("v_dashboard_metrics")
+          .select("*")
+          .eq("user_id", user.id)
+          .single();
+
+        if (error) {
+          console.error("[metrics]", error);
+          return;
+        }
+
+        document.getElementById("total-sales-value").textContent = formatMoney(data.total_sales_amount);
+        document.getElementById("total-artifacts-value").textContent = formatNumber(data.total_artifacts);
+        document.getElementById("ready-count-value").textContent = formatNumber(data.ready_count);
+        document.getElementById("sent-count-value").textContent = formatNumber(data.sent_to_gallery_count);
+      }
+
+      let chartInstance = null;
+
+      async function loadSeriesChart() {
+        const { data: u } = await supabase.auth.getUser();
+        const user = u.user;
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from("v_dashboard_6mo_series")
+          .select("month_start, artifacts_added_cumulative, sales_amount_cumulative")
+          .eq("user_id", user.id)
+          .order("month_start", { ascending: true });
+
+        if (error) {
+          console.error("[series]", error);
+          return;
+        }
+
+        const lang = getLang();
+        const locale = lang === "fa" ? "fa-IR" : "en-GB";
+
+        const labels = data.map((r) =>
+          new Date(r.month_start).toLocaleDateString(locale, { month: "short" })
+        );
+
+        const worksCum = data.map((r) => Number(r.artifacts_added_cumulative || 0));
+        const moneyCum = data.map((r) => Number(r.sales_amount_cumulative || 0));
+
+        const ctx = document.getElementById("dashChart").getContext("2d");
+
+        if (chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: lang === "fa" ? "آثار (تجمعی)" : "Works (cumulative)",
+                data: worksCum,
+                tension: 0.35,
+              },
+              {
+                label: lang === "fa" ? "درآمد (تجمعی)" : "Income (cumulative)",
+                data: moneyCum,
+                tension: 0.35,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: { color: "rgba(255,255,255,0.75)" },
+              },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => {
+                    const label = ctx.dataset.label || "";
+                    const val = ctx.parsed.y;
+                    if (label.includes("Income") || label.includes("درآمد")) return `${label}: ${formatMoney(val)}`;
+                    return `${label}: ${formatNumber(val)}`;
+                  },
+                },
+              },
+            },
+            scales: {
+              x: { ticks: { color: "rgba(255,255,255,0.65)" }, grid: { color: "rgba(255,255,255,0.06)" } },
+              y: { ticks: { color: "rgba(255,255,255,0.65)" }, grid: { color: "rgba(255,255,255,0.06)" } },
+            },
+          },
+        });
+      }
+
+      function renderStrip(listEl, items) {
+        listEl.innerHTML = "";
+
+        if (!items.length) {
+          const empty = document.createElement("div");
+          empty.style.padding = "0.75rem";
+          empty.style.color = "rgba(255,255,255,0.6)";
+          empty.textContent = I18N[getLang()].empty_strip;
+          listEl.appendChild(empty);
+          return;
+        }
+
+        for (const it of items) {
+          const card = document.createElement("div");
+          card.className = "artifact-card";
+          card.dataset.artifactId = it.id;
+
+          const imgWrap = document.createElement("div");
+          imgWrap.className = "artifact-image";
+
+          const url = resolveMainImageUrl(it.main_image);
+          if (url) {
+            const img = document.createElement("img");
+            img.src = url;
+            img.alt = it.title || "artifact";
+            imgWrap.appendChild(img);
+          } else {
+            imgWrap.textContent = pickEmojiForStatus(it.status);
+          }
+
+          const title = document.createElement("div");
+          title.className = "artifact-title";
+          title.textContent = it.title || "—";
+
+          card.appendChild(imgWrap);
+          card.appendChild(title);
+
+          // Assumption: you will have an artifact details page later.
+          card.addEventListener("click", () => {
+            window.location.href = `artifact.html?id=${encodeURIComponent(it.id)}`;
+          });
+
+          listEl.appendChild(card);
+        }
+      }
+
+      async function loadArtifactStrips() {
+        const { data: u } = await supabase.auth.getUser();
+        const user = u.user;
+        if (!user) return;
+
+        async function loadStatus(status) {
+          return await supabase
+            .from("v_artifact_cards")
+            .select("id,title,main_image,status,created_at")
+            .eq("user_id", user.id)
+            .eq("status", status)
+            .order("created_at", { ascending: false })
+            .limit(12);
+        }
+
+        const [inProg, ready, sent] = await Promise.all([
+          loadStatus("in_progress"),
+          loadStatus("ready"),
+          loadStatus("sent_to_gallery"),
+        ]);
+
+        if (inProg.error) console.error(inProg.error);
+        if (ready.error) console.error(ready.error);
+        if (sent.error) console.error(sent.error);
+
+        document.getElementById("in-progress-count").textContent = formatNumber(inProg.data?.length || 0);
+        document.getElementById("ready-count").textContent = formatNumber(ready.data?.length || 0);
+        document.getElementById("sent-count").textContent = formatNumber(sent.data?.length || 0);
+
+        renderStrip(document.getElementById("in-progress-list"), inProg.data || []);
+        renderStrip(document.getElementById("ready-list"), ready.data || []);
+        renderStrip(document.getElementById("sent-list"), sent.data || []);
+      }
+
+      // -----------------------
+      // Buttons (navigation)
+      // -----------------------
+      document.getElementById("add-artifact-btn").addEventListener("click", () => {
+        // Assumption: you will create this page
+        window.location.href = "add_artifact.html";
+      });
+
+      document.getElementById("gallery-summary-btn").addEventListener("click", () => {
+        window.location.href = "gallery_summary.html";
+      });
+
+      document.getElementById("sales-history-btn").addEventListener("click", () => {
+        window.location.href = "sales_history.html";
+      });
+
+      document.getElementById("receipts-history-btn").addEventListener("click", () => {
+        window.location.href = "receipts_history.html";
+      });
+
+      // -----------------------
+      // Boot
+      // -----------------------
+      (async function boot() {
+        try {
+          await initSupabase();
+          const session = await requireSessionOrRedirect();
+          if (!session) return;
+
+          await loadProfile();
+          await loadMetrics();
+          await loadSeriesChart();
+          await loadArtifactStrips();
+
+          // Re-render chart labels if language changes
+          const oldApplyLang = applyLang;
+          applyLang = function (lang) {
+            oldApplyLang(lang);
+            loadSeriesChart().catch(console.error);
+          };
+        } catch (e) {
+          console.error("[dashboard boot]", e);
+          // If env is missing, show a simple hint
+          document.getElementById("profile-name").textContent = "Config error";
+        }
+      })();
+
+      /*
+        ASSUMPTIONS MADE (change if needed):
+        1) You have a Vercel route: /api/public-env that returns JSON:
+           { SUPABASE_URL: "...", SUPABASE_ANON_KEY: "..." }
+        2) artifacts.main_image is either:
+           - a full URL, OR
+           - a Supabase Storage path inside bucket named "artifacts" (editable via localStorage.storageBucket).
+        3) Artifact click goes to: artifact.html?id=...
+        4) Buttons route to:
+           add_artifact.html, gallery_summary.html, sales_history.html, receipts_history.html
+      */
+    </script>
+  </body>
 </html>

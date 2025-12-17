@@ -1,0 +1,4 @@
+Let's moce onto dashboard HTML, It includes a little box in corner for showing profile name, a main Dashboard box on top and 3 strips under that, below all these we should have 5 buttons one for adding artifact, one for gallery summary, one for sales history, one for sales history, one for gallery reciepts history 
+In main Dashboard box: I want to have total sales, total artifacts, count of artifacts "ready"/"sent to gallery", plot of count of works added and money earned cumulative in last 6 months 
+In strips: I want to show 3 horizontal lists of artifacts (picture and title) one for "in_progress", one for "ready" and one for "sent_to_gallery"
+I want it to be with same theme as last parts with a comfy design and also in both languages Persain & English
