@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="fa" dir="rtl" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>History Report | Honarapp</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
+      body {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: "Vazirmatn", "Inter", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a1410 0%, #0a0a0a 100%);
+        color: #ffffff;
+      }
+
+      [dir="ltr"] body {
+        font-family: "Inter", sans-serif;
+      }
+
+      .page-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        padding: 2rem;
+      }
+
+      .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .page-header {
+        flex: 1;
+      }
+
+      .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #d4af37;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-subtitle {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 400;
+      }
+
+      .language-toggle {
+        display: flex;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem;
+        border-radius: 50px;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+      }
+
+      .lang-btn {
+        padding: 0.5rem 1.25rem;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      .lang-btn.active {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+      }
+
+      .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 250px;
+        max-width: 400px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 12px;
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.08);
+        border-color: #d4af37;
+      }
+
+      .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .action-btn {
+        padding: 0.875rem 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 12px;
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .action-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(212, 175, 55, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .action-btn.primary {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+        border: none;
+      }
+
+      .action-btn.primary:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+      }
+
+      .table-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .table-wrapper {
+        overflow-x: auto;
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .data-table thead {
+        background: rgba(212, 175, 55, 0.1);
+        border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+      }
+
+      .data-table th {
+        padding: 1.25rem 1.5rem;
+        text-align: right;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #d4af37;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      [dir="ltr"] .data-table th {
+        text-align: left;
+      }
+
+      .data-table tbody tr {
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .data-table tbody tr:hover {
+        background: rgba(212, 175, 55, 0.05);
+      }
+
+      .data-table td {
+        padding: 1.25rem 1.5rem;
+        text-align: right;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.9);
+        vertical-align: middle;
+      }
+
+      [dir="ltr"] .data-table td {
+        text-align: left;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.375rem 0.875rem;
+        border-radius: 20px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+      }
+
+      .status-completed {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+        border: 1px solid rgba(76, 175, 80, 0.3);
+      }
+
+      .amount-value {
+        font-weight: 600;
+        color: #d4af37;
+        font-size: 1rem;
+      }
+
+      .table-footer {
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(212, 175, 55, 0.1);
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .table-info {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .pagination {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .page-btn {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      .page-btn:hover {
+        background: rgba(212, 175, 55, 0.1);
+        border-color: rgba(212, 175, 55, 0.4);
+        color: #d4af37;
+      }
+
+      .page-btn.active {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+        border: none;
+      }
+
+      /* Small thumb inside "Artwork" column */
+      .artwork-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .thumb {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        border: 1px solid rgba(212, 175, 55, 0.25);
+        overflow: hidden;
+        flex: 0 0 42px;
+        background: rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.1rem;
+      }
+      .thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .art-title {
+        max-width: 340px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .empty-row {
+        text-align: center !important;
+        padding: 2rem 1rem !important;
+        color: rgba(255, 255, 255, 0.65) !important;
+      }
+
+      @media (max-width: 768px) {
+        .page-wrapper {
+          padding: 1rem;
+        }
+
+        .page-title {
+          font-size: 1.5rem;
+        }
+
+        .action-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-box {
+          max-width: 100%;
+        }
+
+        .action-buttons {
+          width: 100%;
+          justify-content: stretch;
+        }
+
+        .action-btn {
+          flex: 1;
+          justify-content: center;
+        }
+
+        .data-table th,
+        .data-table td {
+          padding: 1rem 0.75rem;
+          font-size: 0.8125rem;
+        }
+
+        .table-footer {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .art-title {
+          max-width: 180px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="h-full">
+    <div class="page-wrapper">
+      <div class="page-container">
+        <header class="top-bar">
+          <div class="page-header">
+            <h1 class="page-title" id="page-title">تاریخچه فروش</h1>
+            <p class="page-subtitle" id="page-subtitle">مشاهده تمام تراکنش‌های فروش</p>
+          </div>
+
+          <div class="language-toggle">
+            <button class="lang-btn" data-lang="fa" id="btn-fa">فارسی</button>
+            <button class="lang-btn" data-lang="en" id="btn-en">English</button>
+          </div>
+        </header>
+
+        <div class="action-bar">
+          <div class="search-box">
+            <input type="text" class="search-input" id="search-input" placeholder="جستجو..." />
+          </div>
+
+          <div class="action-buttons">
+            <button class="action-btn" id="back-btn">
+              <span>←</span>
+              <span id="back-text">بازگشت</span>
+            </button>
+
+            <button class="action-btn primary" id="export-btn">
+              <span>📊</span>
+              <span id="export-text">خروجی Excel</span>
+            </button>
+          </div>
+        </div>
+
+        <main class="table-container">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th id="col1-header">تاریخ</th>
+                  <th id="col2-header">نام اثر</th>
+                  <th id="col3-header">گالری</th>
+                  <th id="col4-header">مبلغ</th>
+                  <th id="col5-header">وضعیت</th>
+                </tr>
+              </thead>
+
+              <tbody id="sales-tbody"></tbody>
+            </table>
+          </div>
+
+          <footer class="table-footer">
+            <div class="table-info" id="table-info">—</div>
+            <nav class="pagination" id="pagination"></nav>
+          </footer>
+        </main>
+      </div>
+    </div>
+
+    <!-- Supabase UMD -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- Your existing client + auth guard -->
+    <script src="./js/supabase.js"></script>
+    <script src="./js/guard.js"></script>
+
+    <script>
+      // -----------------------
+      // Language (localStorage)
+      // -----------------------
+      const I18N = {
+        fa: {
+          title: "تاریخچه فروش",
+          subtitle: "مشاهده تمام تراکنش‌های فروش",
+          date: "تاریخ",
+          artwork: "نام اثر",
+          gallery: "گالری",
+          amount: "مبلغ",
+          status: "وضعیت",
+          back: "بازگشت",
+          export: "خروجی Excel",
+          search_ph: "جستجو...",
+          completed: "تکمیل شده",
+          no_gallery: "—",
+          empty: "هیچ فروشی ثبت نشده است ✨",
+          showing: (from, to, total) => `نمایش ${from}-${to} از ${total} مورد`,
+          prev: "←",
+          next: "→",
+        },
+        en: {
+          title: "Sales History",
+          subtitle: "View all sales transactions",
+          date: "Date",
+          artwork: "Artwork",
+          gallery: "Gallery",
+          amount: "Amount",
+          status: "Status",
+          back: "Back",
+          export: "Export Excel",
+          search_ph: "Search...",
+          completed: "Completed",
+          no_gallery: "—",
+          empty: "No sales yet ✨",
+          showing: (from, to, total) => `Showing ${from}-${to} of ${total} items`,
+          prev: "←",
+          next: "→",
+        },
+      };
+
+      function getLang() {
+        const v = localStorage.getItem("lang");
+        return v === "en" ? "en" : "fa";
+      }
+
+      function applyLang(lang) {
+        const safe = lang === "en" ? "en" : "fa";
+        localStorage.setItem("lang", safe);
+
+        document.documentElement.lang = safe;
+        document.documentElement.dir = safe === "fa" ? "rtl" : "ltr";
+
+        document.getElementById("btn-fa").classList.toggle("active", safe === "fa");
+        document.getElementById("btn-en").classList.toggle("active", safe === "en");
+
+        const t = I18N[safe];
+        document.getElementById("page-title").textContent = t.title;
+        document.getElementById("page-subtitle").textContent = t.subtitle;
+
+        document.getElementById("col1-header").textContent = t.date;
+        document.getElementById("col2-header").textContent = t.artwork;
+        document.getElementById("col3-header").textContent = t.gallery;
+        document.getElementById("col4-header").textContent = t.amount;
+        document.getElementById("col5-header").textContent = t.status;
+
+        document.getElementById("back-text").textContent = t.back;
+        document.getElementById("export-text").textContent = t.export;
+        document.getElementById("search-input").placeholder = t.search_ph;
+      }
+
+      document.getElementById("btn-fa").addEventListener("click", () => {
+        applyLang("fa");
+        refresh();
+      });
+      document.getElementById("btn-en").addEventListener("click", () => {
+        applyLang("en");
+        refresh();
+      });
+
+      applyLang(getLang());
+
+      // -----------------------
+      // Formatting
+      // -----------------------
+      function formatNumber(n) {
+        const lang = getLang();
+        const locale = lang === "fa" ? "fa-IR" : "en-GB";
+        return new Intl.NumberFormat(locale).format(Number(n || 0));
+      }
+
+      function formatMoney(n) {
+        // MVP assumption: single currency symbol for UI
+        const symbol = localStorage.getItem("currencySymbol") || "$";
+        return symbol + formatNumber(n);
+      }
+
+      function formatDate(iso) {
+        const d = new Date(iso);
+        const lang = getLang();
+        if (lang === "fa") {
+          // Persian calendar display
+          return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }).format(d);
+        }
+        return new Intl.DateTimeFormat("en-GB", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).format(d);
+      }
+
+      // -----------------------
+      // Image resolver (main_image)
+      // -----------------------
+      const STORAGE_BUCKET = localStorage.getItem("storageBucket") || "artifacts";
+
+      function resolveImageUrl(path) {
+        if (!path) return null;
+        const p = String(path);
+        if (p.startsWith("http://") || p.startsWith("https://")) return p;
+        try {
+          return window.supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(p).data.publicUrl || null;
+        } catch {
+          return null;
+        }
+      }
+
+      // -----------------------
+      // Data + UI state
+      // -----------------------
+      const PAGE_SIZE = 10;
+      let currentPage = 1;
+      let totalCount = 0;
+      let currentSearch = "";
+      let lastRows = []; // for export
+
+      function setTableInfo() {
+        const t = I18N[getLang()];
+        const from = totalCount === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
+        const to = Math.min(currentPage * PAGE_SIZE, totalCount);
+        document.getElementById("table-info").textContent = t.showing(from, to, totalCount);
+      }
+
+      function renderEmpty() {
+        const tbody = document.getElementById("sales-tbody");
+        tbody.innerHTML = "";
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 5;
+        td.className = "empty-row";
+        td.textContent = I18N[getLang()].empty;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
+
+      function renderRows(rows, galleryNameById) {
+        const tbody = document.getElementById("sales-tbody");
+        tbody.innerHTML = "";
+
+        if (!rows.length) {
+          renderEmpty();
+          return;
+        }
+
+        const t = I18N[getLang()];
+
+        for (const r of rows) {
+          const tr = document.createElement("tr");
+
+          // Date
+          const tdDate = document.createElement("td");
+          tdDate.textContent = formatDate(r.sold_at);
+          tr.appendChild(tdDate);
+
+          // Artwork (thumb + title)
+          const tdArt = document.createElement("td");
+          const wrap = document.createElement("div");
+          wrap.className = "artwork-cell";
+
+          const thumb = document.createElement("div");
+          thumb.className = "thumb";
+          const url = resolveImageUrl(r.artifact_main_image);
+          if (url) {
+            const img = document.createElement("img");
+            img.src = url;
+            img.alt = r.artifact_title || "artwork";
+            thumb.appendChild(img);
+          } else {
+            thumb.textContent = "🎨";
+          }
+
+          const title = document.createElement("div");
+          title.className = "art-title";
+          title.textContent = r.artifact_title || "—";
+
+          wrap.appendChild(thumb);
+          wrap.appendChild(title);
+          tdArt.appendChild(wrap);
+          tr.appendChild(tdArt);
+
+          // Gallery
+          const tdGal = document.createElement("td");
+          if (r.gallery_id) {
+            tdGal.textContent = galleryNameById.get(r.gallery_id) || t.no_gallery;
+          } else {
+            tdGal.textContent = t.no_gallery;
+          }
+          tr.appendChild(tdGal);
+
+          // Amount
+          const tdAmt = document.createElement("td");
+          const spanAmt = document.createElement("span");
+          spanAmt.className = "amount-value";
+          spanAmt.textContent = formatMoney(r.amount);
+          tdAmt.appendChild(spanAmt);
+          tr.appendChild(tdAmt);
+
+          // Status (sales are always completed in MVP)
+          const tdStatus = document.createElement("td");
+          const badge = document.createElement("span");
+          badge.className = "status-badge status-completed";
+          badge.textContent = t.completed;
+          tdStatus.appendChild(badge);
+          tr.appendChild(tdStatus);
+
+          tbody.appendChild(tr);
+        }
+      }
+
+      function renderPagination() {
+        const pag = document.getElementById("pagination");
+        pag.innerHTML = "";
+
+        const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+        const t = I18N[getLang()];
+
+        // show up to 3 page numbers centered around current
+        const pages = [];
+        const start = Math.max(1, Math.min(currentPage - 1, totalPages - 2));
+        const end = Math.min(totalPages, start + 2);
+        for (let p = start; p <= end; p++) pages.push(p);
+
+        for (const p of pages) {
+          const btn = document.createElement("button");
+          btn.className = "page-btn" + (p === currentPage ? " active" : "");
+          btn.textContent = String(p);
+          btn.addEventListener("click", () => {
+            currentPage = p;
+            refresh();
+          });
+          pag.appendChild(btn);
+        }
+
+        // next
+        const next = document.createElement("button");
+        next.className = "page-btn";
+        next.textContent = t.next;
+        next.disabled = currentPage >= totalPages;
+        next.style.opacity = next.disabled ? "0.4" : "1";
+        next.style.cursor = next.disabled ? "not-allowed" : "pointer";
+        next.addEventListener("click", () => {
+          if (currentPage < totalPages) {
+            currentPage += 1;
+            refresh();
+          }
+        });
+        pag.appendChild(next);
+      }
+
+      async function fetchGalleryNamesForRows(rows) {
+        const ids = [...new Set(rows.map((r) => r.gallery_id).filter(Boolean))];
+        const map = new Map();
+        if (!ids.length) return map;
+
+        const { data, error } = await window.supabaseClient
+          .from("gallery_movements")
+          .select("id, gallery_name")
+          .in("id", ids);
+
+        if (error) {
+          console.error("[gallery names]", error);
+          return map;
+        }
+
+        for (const gm of data || []) {
+          map.set(gm.id, gm.gallery_name || I18N[getLang()].no_gallery);
+        }
+        return map;
+      }
+
+      async function fetchCount(userId) {
+        let q = window.supabaseClient
+          .from("v_sales_list")
+          .select("sale_id", { count: "exact", head: true })
+          .eq("user_id", userId);
+
+        if (currentSearch.trim()) {
+          const s = currentSearch.trim();
+          // search in artifact title OR buyer name
+          q = q.or(`artifact_title.ilike.%${s}%,buyer_name.ilike.%${s}%`);
+        }
+
+        const res = await q;
+        if (res.error) {
+          console.error("[count]", res.error);
+          return 0;
+        }
+        return res.count || 0;
+      }
+
+      async function fetchPage(userId) {
+        const from = (currentPage - 1) * PAGE_SIZE;
+        const to = from + PAGE_SIZE - 1;
+
+        let q = window.supabaseClient
+          .from("v_sales_list")
+          .select("sale_id,sold_at,amount,buyer_name,notes,sold_channel,receipt_id,gallery_id,artifact_id,artifact_title,artifact_main_image")
+          .eq("user_id", userId)
+          .order("sold_at", { ascending: false })
+          .range(from, to);
+
+        if (currentSearch.trim()) {
+          const s = currentSearch.trim();
+          q = q.or(`artifact_title.ilike.%${s}%,buyer_name.ilike.%${s}%`);
+        }
+
+        const res = await q;
+        if (res.error) {
+          console.error("[page]", res.error);
+          return [];
+        }
+        return res.data || [];
+      }
+
+      async function refresh() {
+        const { data: u } = await window.supabaseClient.auth.getUser();
+        const user = u.user;
+        if (!user) return; // guard.js will redirect
+
+        totalCount = await fetchCount(user.id);
+        setTableInfo();
+
+        const rows = await fetchPage(user.id);
+        lastRows = rows;
+
+        const galleryNameById = await fetchGalleryNamesForRows(rows);
+        renderRows(rows, galleryNameById);
+        renderPagination();
+        setTableInfo();
+      }
+
+      // -----------------------
+      // Export (CSV that opens in Excel)
+      // -----------------------
+      function toCsvValue(v) {
+        const s = String(v ?? "");
+        if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+        return s;
+      }
+
+      async function exportCsv() {
+        const { data: u } = await window.supabaseClient.auth.getUser();
+        const user = u.user;
+        if (!user) return;
+
+        // export ALL matching rows (MVP: cap to 5000)
+        let q = window.supabaseClient
+          .from("v_sales_list")
+          .select("sold_at,amount,buyer_name,sold_channel,gallery_id,artifact_title")
+          .eq("user_id", user.id)
+          .order("sold_at", { ascending: false })
+          .limit(5000);
+
+        if (currentSearch.trim()) {
+          const s = currentSearch.trim();
+          q = q.or(`artifact_title.ilike.%${s}%,buyer_name.ilike.%${s}%`);
+        }
+
+        const { data, error } = await q;
+        if (error) {
+          console.error("[export]", error);
+          return;
+        }
+
+        const galleryNameById = await fetchGalleryNamesForRows(data || []);
+
+        const lang = getLang();
+        const header =
+          lang === "fa"
+            ? ["تاریخ", "نام اثر", "گالری", "مبلغ", "خریدار", "کانال"]
+            : ["Date", "Artwork", "Gallery", "Amount", "Buyer", "Channel"];
+
+        const lines = [];
+        lines.push(header.map(toCsvValue).join(","));
+
+        for (const r of data || []) {
+          const g = r.gallery_id ? galleryNameById.get(r.gallery_id) || I18N[lang].no_gallery : I18N[lang].no_gallery;
+          lines.push(
+            [
+              formatDate(r.sold_at),
+              r.artifact_title || "",
+              g,
+              String(r.amount ?? ""),
+              r.buyer_name || "",
+              r.sold_channel || "",
+            ].map(toCsvValue).join(",")
+          );
+        }
+
+        // UTF-8 BOM for Excel + Persian text
+        const csvContent = "\uFEFF" + lines.join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `sales_history_${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        URL.revokeObjectURL(url);
+      }
+
+      // -----------------------
+      // Events
+      // -----------------------
+      document.getElementById("back-btn").addEventListener("click", () => {
+        window.location.href = "dashboard.html";
+      });
+
+      document.getElementById("export-btn").addEventListener("click", () => {
+        exportCsv().catch(console.error);
+      });
+
+      // simple debounce
+      let searchTimer = null;
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        currentSearch = e.target.value || "";
+        currentPage = 1;
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => refresh().catch(console.error), 250);
+      });
+
+      // Boot
+      (async function boot() {
+        try {
+          if (!window.supabaseClient) throw new Error("supabaseClient not found (check script order).");
+          // guard.js redirects if not logged in
+          await refresh();
+        } catch (e) {
+          console.error("[sales_history boot]", e);
+        }
+      })();
+
+      /*
+        ASSUMPTIONS:
+        1) You have the view: public.v_sales_list (as we defined earlier).
+        2) artifacts.main_image is either a full URL OR a Supabase Storage path in bucket "artifacts".
+        3) Sales are always 'completed' in MVP (no pending/cancelled sales states in your schema).
+      */
+    </script>
+  </body>
+</html>
