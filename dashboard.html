@@ -557,7 +557,7 @@
       let supabase = null;
 
       async function requireSessionOrRedirect() {
-        const { data } = await supabase.auth.getSession();
+        const { data } = await supabaseClient.auth.getSession();
         if (!data.session) {
           window.location.href = "login.html";
           return null;
@@ -609,12 +609,12 @@
       // -----------------------
       // Data loaders
       // -----------------------
-      async function loadProfile() {
-        const { data: u } = await supabase.auth.getUser();
+      async function loadProfile(supabaseClient) {
+        const { data: u } = await supabaseClient.auth.getUser();
         const user = u.user;
         if (!user) return;
 
-        const { data: profile } = await supabase
+        const { data: profile } = await supabaseClient
           .from("users")
           .select("name, profile_image")
           .eq("user_id", user.id)
@@ -637,12 +637,12 @@
         }
       }
 
-      async function loadMetrics() {
-        const { data: u } = await supabase.auth.getUser();
+      async function loadMetrics(supabaseClient) {
+        const { data: u } = await supabaseClient.auth.getUser();
         const user = u.user;
         if (!user) return;
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
           .from("v_dashboard_metrics")
           .select("*")
           .eq("user_id", user.id)
@@ -661,12 +661,12 @@
 
       let chartInstance = null;
 
-      async function loadSeriesChart() {
-        const { data: u } = await supabase.auth.getUser();
+      async function loadSeriesChart(supabaseClient) {
+        const { data: u } = await supabaseClient.auth.getUser();
         const user = u.user;
         if (!user) return;
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
           .from("v_dashboard_6mo_series")
           .select("month_start, artifacts_added_cumulative, sales_amount_cumulative")
           .eq("user_id", user.id)
@@ -780,13 +780,13 @@
         }
       }
 
-      async function loadArtifactStrips() {
-        const { data: u } = await supabase.auth.getUser();
+      async function loadArtifactStrips(supabaseClient) {
+        const { data: u } = await supabaseClient.auth.getUser();
         const user = u.user;
         if (!user) return;
 
         async function loadStatus(status) {
-          return await supabase
+          return await supabaseClient
             .from("v_artifact_cards")
             .select("id,title,main_image,status,created_at")
             .eq("user_id", user.id)
