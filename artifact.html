@@ -1069,7 +1069,7 @@
 
         if (file) {
           const safeName = String(file.name || "image").replace(/[^\w.\-]+/g, "_");
-          const path = `${user.id}/${artifact.id}/${Date.now()}_${safeName}`;
+          const path = `users/${user.id}/artifacts/${artifact.id}/${Date.now()}_${safeName}`;
 
           const up = await window.supabaseClient.storage
             .from(STORAGE_BUCKET)
