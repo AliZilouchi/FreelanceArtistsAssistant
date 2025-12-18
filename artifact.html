@@ -1070,9 +1070,12 @@
         if (file) {
           const safeName = String(file.name || "image").replace(/[^\w.\-]+/g, "_");
           const path = `users/${user.id}/artifacts/${artifact.id}/${Date.now()}_${safeName}`;
-
+          console.log("[upload] bucket =", STORAGE_BUCKET);
+          console.log("[upload] uid =", user.id);
+          console.log("[upload] path =", path);
+          
           const up = await window.supabaseClient.storage
-            .from(STORAGE_BUCKET)
+          .from(STORAGE_BUCKET)
             .upload(path, file, { upsert: true });
 
           if (up.error) throw up.error;
