@@ -1077,7 +1077,7 @@
           
           const up = await window.supabaseClient.storage
           .from(STORAGE_BUCKET)
-            .upload(path, file, { upsert: true });
+            .upload(path, file, { upsert: false });
 
           if (up.error) throw up.error;
           newImagePath = path;
