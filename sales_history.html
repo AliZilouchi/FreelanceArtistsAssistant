@@ -8,18 +8,10 @@
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
 
-      body {
-        box-sizing: border-box;
-      }
+      body { box-sizing: border-box; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
+      html, body {
         height: 100%;
         font-family: "Vazirmatn", "Inter", sans-serif;
       }
@@ -29,9 +21,7 @@
         color: #ffffff;
       }
 
-      [dir="ltr"] body {
-        font-family: "Inter", sans-serif;
-      }
+      [dir="ltr"] body { font-family: "Inter", sans-serif; }
 
       .page-wrapper {
         width: 100%;
@@ -40,10 +30,7 @@
         padding: 2rem;
       }
 
-      .page-container {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
+      .page-container { max-width: 1200px; margin: 0 auto; }
 
       .top-bar {
         display: flex;
@@ -54,9 +41,7 @@
         flex-wrap: wrap;
       }
 
-      .page-header {
-        flex: 1;
-      }
+      .page-header { flex: 1; }
 
       .page-title {
         font-size: 2rem;
@@ -132,14 +117,9 @@
         border-color: #d4af37;
       }
 
-      .search-input::placeholder {
-        color: rgba(255, 255, 255, 0.4);
-      }
+      .search-input::placeholder { color: rgba(255, 255, 255, 0.4); }
 
-      .action-buttons {
-        display: flex;
-        gap: 0.75rem;
-      }
+      .action-buttons { display: flex; gap: 0.75rem; }
 
       .action-btn {
         padding: 0.875rem 1.5rem;
@@ -182,14 +162,9 @@
         overflow: hidden;
       }
 
-      .table-wrapper {
-        overflow-x: auto;
-      }
+      .table-wrapper { overflow-x: auto; }
 
-      .data-table {
-        width: 100%;
-        border-collapse: collapse;
-      }
+      .data-table { width: 100%; border-collapse: collapse; }
 
       .data-table thead {
         background: rgba(212, 175, 55, 0.1);
@@ -206,18 +181,14 @@
         letter-spacing: 0.5px;
       }
 
-      [dir="ltr"] .data-table th {
-        text-align: left;
-      }
+      [dir="ltr"] .data-table th { text-align: left; }
 
       .data-table tbody tr {
         border-bottom: 1px solid rgba(212, 175, 55, 0.1);
         transition: all 0.3s ease;
       }
 
-      .data-table tbody tr:hover {
-        background: rgba(212, 175, 55, 0.05);
-      }
+      .data-table tbody tr:hover { background: rgba(212, 175, 55, 0.05); }
 
       .data-table td {
         padding: 1.25rem 1.5rem;
@@ -227,9 +198,7 @@
         vertical-align: middle;
       }
 
-      [dir="ltr"] .data-table td {
-        text-align: left;
-      }
+      [dir="ltr"] .data-table td { text-align: left; }
 
       .status-badge {
         display: inline-block;
@@ -261,15 +230,9 @@
         gap: 1rem;
       }
 
-      .table-info {
-        font-size: 0.875rem;
-        color: rgba(255, 255, 255, 0.6);
-      }
+      .table-info { font-size: 0.875rem; color: rgba(255, 255, 255, 0.6); }
 
-      .pagination {
-        display: flex;
-        gap: 0.5rem;
-      }
+      .pagination { display: flex; gap: 0.5rem; }
 
       .page-btn {
         width: 40px;
@@ -297,12 +260,12 @@
         border: none;
       }
 
-      /* Small thumb inside "Artwork" column */
       .artwork-cell {
         display: flex;
         align-items: center;
         gap: 0.75rem;
       }
+
       .thumb {
         width: 42px;
         height: 42px;
@@ -317,12 +280,14 @@
         color: rgba(255, 255, 255, 0.7);
         font-size: 1.1rem;
       }
+
       .thumb img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
       }
+
       .art-title {
         max-width: 340px;
         white-space: nowrap;
@@ -337,47 +302,20 @@
       }
 
       @media (max-width: 768px) {
-        .page-wrapper {
-          padding: 1rem;
-        }
+        .page-wrapper { padding: 1rem; }
+        .page-title { font-size: 1.5rem; }
+        .action-bar { flex-direction: column; align-items: stretch; }
+        .search-box { max-width: 100%; }
+        .action-buttons { width: 100%; justify-content: stretch; }
+        .action-btn { flex: 1; justify-content: center; }
 
-        .page-title {
-          font-size: 1.5rem;
-        }
-
-        .action-bar {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .search-box {
-          max-width: 100%;
-        }
-
-        .action-buttons {
-          width: 100%;
-          justify-content: stretch;
-        }
-
-        .action-btn {
-          flex: 1;
-          justify-content: center;
-        }
-
-        .data-table th,
-        .data-table td {
+        .data-table th, .data-table td {
           padding: 1rem 0.75rem;
           font-size: 0.8125rem;
         }
 
-        .table-footer {
-          flex-direction: column;
-          text-align: center;
-        }
-
-        .art-title {
-          max-width: 180px;
-        }
+        .table-footer { flex-direction: column; text-align: center; }
+        .art-title { max-width: 180px; }
       }
     </style>
   </head>
@@ -458,16 +396,15 @@
           artwork: "نام اثر",
           gallery: "گالری",
           amount: "مبلغ",
-          status: "کانال",
-          completed: "مستقیم", 
+          channel: "کانال",
+          channel_direct: "مستقیم",
+          channel_gallery: "گالری",
           back: "بازگشت",
           export: "خروجی Excel",
           search_ph: "جستجو...",
-          completed: "تکمیل شده",
           no_gallery: "—",
           empty: "هیچ فروشی ثبت نشده است ✨",
           showing: (from, to, total) => `نمایش ${from}-${to} از ${total} مورد`,
-          prev: "←",
           next: "→",
         },
         en: {
@@ -477,16 +414,15 @@
           artwork: "Artwork",
           gallery: "Gallery",
           amount: "Amount",
-          status: "Channel",
-          completed: "Direct",
+          channel: "Channel",
+          channel_direct: "Direct",
+          channel_gallery: "Gallery",
           back: "Back",
           export: "Export Excel",
           search_ph: "Search...",
-          completed: "Completed",
           no_gallery: "—",
           empty: "No sales yet ✨",
           showing: (from, to, total) => `Showing ${from}-${to} of ${total} items`,
-          prev: "←",
           next: "→",
         },
       };
@@ -514,21 +450,15 @@
         document.getElementById("col2-header").textContent = t.artwork;
         document.getElementById("col3-header").textContent = t.gallery;
         document.getElementById("col4-header").textContent = t.amount;
-        document.getElementById("col5-header").textContent = t.status;
+        document.getElementById("col5-header").textContent = t.channel;
 
         document.getElementById("back-text").textContent = t.back;
         document.getElementById("export-text").textContent = t.export;
         document.getElementById("search-input").placeholder = t.search_ph;
       }
 
-      document.getElementById("btn-fa").addEventListener("click", () => {
-        applyLang("fa");
-        refresh();
-      });
-      document.getElementById("btn-en").addEventListener("click", () => {
-        applyLang("en");
-        refresh();
-      });
+      document.getElementById("btn-fa").addEventListener("click", () => { applyLang("fa"); refresh(); });
+      document.getElementById("btn-en").addEventListener("click", () => { applyLang("en"); refresh(); });
 
       applyLang(getLang());
 
@@ -536,33 +466,21 @@
       // Formatting
       // -----------------------
       function formatNumber(n) {
-        const lang = getLang();
-        const locale = lang === "fa" ? "fa-IR" : "en-GB";
+        const locale = getLang() === "fa" ? "fa-IR" : "en-GB";
         return new Intl.NumberFormat(locale).format(Number(n || 0));
       }
 
       function formatMoney(n) {
-        // MVP assumption: single currency symbol for UI
         const symbol = localStorage.getItem("currencySymbol") || "$";
         return symbol + formatNumber(n);
       }
 
       function formatDate(iso) {
         const d = new Date(iso);
-        const lang = getLang();
-        if (lang === "fa") {
-          // Persian calendar display
-          return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }).format(d);
+        if (getLang() === "fa") {
+          return new Intl.DateTimeFormat("fa-IR-u-ca-persian", { year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
         }
-        return new Intl.DateTimeFormat("en-GB", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }).format(d);
+        return new Intl.DateTimeFormat("en-GB", { year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
       }
 
       // -----------------------
@@ -588,7 +506,6 @@
       let currentPage = 1;
       let totalCount = 0;
       let currentSearch = "";
-      let lastRows = []; // for export
 
       function setTableInfo() {
         const t = I18N[getLang()];
@@ -607,6 +524,11 @@
         td.textContent = I18N[getLang()].empty;
         tr.appendChild(td);
         tbody.appendChild(tr);
+      }
+
+      function channelLabel(sold_channel) {
+        const t = I18N[getLang()];
+        return sold_channel === "gallery" ? t.channel_gallery : t.channel_direct;
       }
 
       function renderRows(rows, galleryNameById) {
@@ -640,6 +562,7 @@
           const thumb = document.createElement("div");
           thumb.className = "thumb";
           const url = resolveImageUrl(r.artifact_main_image);
+
           if (url) {
             const img = document.createElement("img");
             img.src = url;
@@ -660,11 +583,7 @@
 
           // Gallery
           const tdGal = document.createElement("td");
-          if (r.gallery_id) {
-            tdGal.textContent = galleryNameById.get(r.gallery_id) || t.no_gallery;
-          } else {
-            tdGal.textContent = t.no_gallery;
-          }
+          tdGal.textContent = r.gallery_id ? (galleryNameById.get(r.gallery_id) || t.no_gallery) : t.no_gallery;
           tr.appendChild(tdGal);
 
           // Amount
@@ -675,20 +594,16 @@
           tdAmt.appendChild(spanAmt);
           tr.appendChild(tdAmt);
 
-          // Status (sales are always completed in MVP)
-          // replace the whole "Status" td block with:
+          // Channel
           const tdChannel = document.createElement("td");
           const badge = document.createElement("span");
           badge.className = "status-badge status-completed";
-
-          const isGallery = r.sold_channel === "gallery";
-          badge.textContent =
-          getLang() === "fa"
-              ? (isGallery ? "گالری" : "مستقیم")
-              : (isGallery ? "Gallery" : "Direct");
-
+          badge.textContent = channelLabel(r.sold_channel);
           tdChannel.appendChild(badge);
           tr.appendChild(tdChannel);
+
+          // ✅ THIS WAS THE BIG BUG: append the row
+          tbody.appendChild(tr);
         }
       }
 
@@ -699,7 +614,6 @@
         const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
         const t = I18N[getLang()];
 
-        // show up to 3 page numbers centered around current
         const pages = [];
         const start = Math.max(1, Math.min(currentPage - 1, totalPages - 2));
         const end = Math.min(totalPages, start + 2);
@@ -709,14 +623,10 @@
           const btn = document.createElement("button");
           btn.className = "page-btn" + (p === currentPage ? " active" : "");
           btn.textContent = String(p);
-          btn.addEventListener("click", () => {
-            currentPage = p;
-            refresh();
-          });
+          btn.addEventListener("click", () => { currentPage = p; refresh(); });
           pag.appendChild(btn);
         }
 
-        // next
         const next = document.createElement("button");
         next.className = "page-btn";
         next.textContent = t.next;
@@ -724,10 +634,7 @@
         next.style.opacity = next.disabled ? "0.4" : "1";
         next.style.cursor = next.disabled ? "not-allowed" : "pointer";
         next.addEventListener("click", () => {
-          if (currentPage < totalPages) {
-            currentPage += 1;
-            refresh();
-          }
+          if (currentPage < totalPages) { currentPage += 1; refresh(); }
         });
         pag.appendChild(next);
       }
@@ -742,14 +649,9 @@
           .select("id, gallery_name")
           .in("id", ids);
 
-        if (error) {
-          console.error("[gallery names]", error);
-          return map;
-        }
+        if (error) { console.error("[gallery names]", error); return map; }
 
-        for (const gm of data || []) {
-          map.set(gm.id, gm.gallery_name || I18N[getLang()].no_gallery);
-        }
+        for (const gm of data || []) map.set(gm.id, gm.gallery_name || I18N[getLang()].no_gallery);
         return map;
       }
 
@@ -761,15 +663,11 @@
 
         if (currentSearch.trim()) {
           const s = currentSearch.trim();
-          // search in artifact title OR buyer name
           q = q.or(`artifact_title.ilike.%${s}%,buyer_name.ilike.%${s}%`);
         }
 
         const res = await q;
-        if (res.error) {
-          console.error("[count]", res.error);
-          return 0;
-        }
+        if (res.error) { console.error("[count]", res.error); return 0; }
         return res.count || 0;
       }
 
@@ -790,25 +688,21 @@
         }
 
         const res = await q;
-        if (res.error) {
-          console.error("[page]", res.error);
-          return [];
-        }
+        if (res.error) { console.error("[page]", res.error); return []; }
         return res.data || [];
       }
 
       async function refresh() {
         const { data: u } = await window.supabaseClient.auth.getUser();
         const user = u.user;
-        if (!user) return; // guard.js will redirect
+        if (!user) return;
 
         totalCount = await fetchCount(user.id);
         setTableInfo();
 
         const rows = await fetchPage(user.id);
-        lastRows = rows;
-
         const galleryNameById = await fetchGalleryNamesForRows(rows);
+
         renderRows(rows, galleryNameById);
         renderPagination();
         setTableInfo();
@@ -828,7 +722,6 @@
         const user = u.user;
         if (!user) return;
 
-        // export ALL matching rows (MVP: cap to 5000)
         let q = window.supabaseClient
           .from("v_sales_list")
           .select("sold_at,amount,buyer_name,sold_channel,gallery_id,artifact_title")
@@ -842,14 +735,11 @@
         }
 
         const { data, error } = await q;
-        if (error) {
-          console.error("[export]", error);
-          return;
-        }
+        if (error) { console.error("[export]", error); return; }
 
         const galleryNameById = await fetchGalleryNamesForRows(data || []);
-
         const lang = getLang();
+
         const header =
           lang === "fa"
             ? ["تاریخ", "نام اثر", "گالری", "مبلغ", "خریدار", "کانال"]
@@ -859,7 +749,7 @@
         lines.push(header.map(toCsvValue).join(","));
 
         for (const r of data || []) {
-          const g = r.gallery_id ? galleryNameById.get(r.gallery_id) || I18N[lang].no_gallery : I18N[lang].no_gallery;
+          const g = r.gallery_id ? (galleryNameById.get(r.gallery_id) || I18N[lang].no_gallery) : I18N[lang].no_gallery;
           lines.push(
             [
               formatDate(r.sold_at),
@@ -867,12 +757,11 @@
               g,
               String(r.amount ?? ""),
               r.buyer_name || "",
-              r.sold_channel || "",
+              channelLabel(r.sold_channel),
             ].map(toCsvValue).join(",")
           );
         }
 
-        // UTF-8 BOM for Excel + Persian text
         const csvContent = "\uFEFF" + lines.join("\n");
         const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
@@ -890,15 +779,9 @@
       // -----------------------
       // Events
       // -----------------------
-      document.getElementById("back-btn").addEventListener("click", () => {
-        window.location.href = "dashboard.html";
-      });
+      document.getElementById("back-btn").addEventListener("click", () => { window.location.href = "dashboard.html"; });
+      document.getElementById("export-btn").addEventListener("click", () => { exportCsv().catch(console.error); });
 
-      document.getElementById("export-btn").addEventListener("click", () => {
-        exportCsv().catch(console.error);
-      });
-
-      // simple debounce
       let searchTimer = null;
       document.getElementById("search-input").addEventListener("input", (e) => {
         currentSearch = e.target.value || "";
@@ -907,23 +790,14 @@
         searchTimer = setTimeout(() => refresh().catch(console.error), 250);
       });
 
-      // Boot
       (async function boot() {
         try {
           if (!window.supabaseClient) throw new Error("supabaseClient not found (check script order).");
-          // guard.js redirects if not logged in
           await refresh();
         } catch (e) {
           console.error("[sales_history boot]", e);
         }
       })();
-
-      /*
-        ASSUMPTIONS:
-        1) You have the view: public.v_sales_list (as we defined earlier).
-        2) artifacts.main_image is either a full URL OR a Supabase Storage path in bucket "artifacts".
-        3) Sales are always 'completed' in MVP (no pending/cancelled sales states in your schema).
-      */
     </script>
   </body>
 </html>
