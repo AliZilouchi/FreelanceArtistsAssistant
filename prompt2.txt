@@ -1,4 +1,2 @@
-Thanks, before checking gallery summary better I want you to check this error I'm getting in login:
-
-Uncaught SyntaxError: redeclaration of non-configurable global property supabase
-    <anonymous> https://artistassist.vercel.app/login.html?email=abbaszilouchi@gmail.com&password=123456:405
+Last error in firefox; 404 for this:
+https://artistassist.vercel.app/favicon.ico
