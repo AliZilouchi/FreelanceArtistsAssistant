@@ -874,10 +874,10 @@
       // -----------------------
       (async function boot() {
         try {
-          const supabase = getSupabaseClientOrThrow();
+          window.supabaseClient = getSupabaseClientOrThrow();
 
           // guard.js already redirects if not logged in, but you can keep this check too:
-          const { data } = await supabase.auth.getSession();
+          const { data } = await supabaseClient.auth.getSession();
           if (!data.session) return;
 
           // Now replace any `supabase` references below with this local `supabase`
