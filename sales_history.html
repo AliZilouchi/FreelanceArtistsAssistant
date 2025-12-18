@@ -424,7 +424,7 @@
                   <th id="col2-header">نام اثر</th>
                   <th id="col3-header">گالری</th>
                   <th id="col4-header">مبلغ</th>
-                  <th id="col5-header">وضعیت</th>
+                  <th id="col5-header">کانال</th>
                 </tr>
               </thead>
 
@@ -458,7 +458,8 @@
           artwork: "نام اثر",
           gallery: "گالری",
           amount: "مبلغ",
-          status: "وضعیت",
+          status: "کانال",
+          completed: "مستقیم", 
           back: "بازگشت",
           export: "خروجی Excel",
           search_ph: "جستجو...",
@@ -476,7 +477,8 @@
           artwork: "Artwork",
           gallery: "Gallery",
           amount: "Amount",
-          status: "Status",
+          status: "Channel",
+          completed: "Direct",
           back: "Back",
           export: "Export Excel",
           search_ph: "Search...",
@@ -620,6 +622,10 @@
 
         for (const r of rows) {
           const tr = document.createElement("tr");
+          tr.style.cursor = "pointer";
+          tr.addEventListener("click", () => {
+            window.location.href = `sale_detail.html?id=${encodeURIComponent(r.sale_id)}`;
+          });
 
           // Date
           const tdDate = document.createElement("td");
@@ -670,14 +676,19 @@
           tr.appendChild(tdAmt);
 
           // Status (sales are always completed in MVP)
-          const tdStatus = document.createElement("td");
+          // replace the whole "Status" td block with:
+          const tdChannel = document.createElement("td");
           const badge = document.createElement("span");
           badge.className = "status-badge status-completed";
-          badge.textContent = t.completed;
-          tdStatus.appendChild(badge);
-          tr.appendChild(tdStatus);
 
-          tbody.appendChild(tr);
+          const isGallery = r.sold_channel === "gallery";
+          badge.textContent =
+          getLang() === "fa"
+              ? (isGallery ? "گالری" : "مستقیم")
+              : (isGallery ? "Gallery" : "Direct");
+
+          tdChannel.appendChild(badge);
+          tr.appendChild(tdChannel);
         }
       }
 
