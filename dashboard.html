@@ -442,6 +442,11 @@
               <span id="add-artifact-text">افزودن اثر جدید</span>
             </button>
 
+            <button class="action-btn primary" id="create-receipt-btn">
+              <span class="action-btn-icon">🧾</span>
+              <span id="create-receipt-text">ایجاد رسید جدید</span>
+            </button>
+
             <button class="action-btn" id="gallery-summary-btn">
               <span class="action-btn-icon">📊</span>
               <span id="gallery-summary-text">خلاصه گالری</span>
@@ -486,6 +491,7 @@
           sales_history: "تاریخچه فروش",
           receipts_history: "تاریخچه رسیدها",
           empty_strip: "هنوز چیزی اینجا نیست ✨",
+          create_receipt: "ایجاد رسید جدید",
         },
         en: {
           total_sales: "Total Sales",
@@ -502,6 +508,7 @@
           sales_history: "Sales History",
           receipts_history: "Receipts History",
           empty_strip: "Nothing here yet ✨",
+          create_receipt: "Create New Receipt",
         },
       };
 
@@ -534,6 +541,7 @@
         document.getElementById("sent-title").textContent = t.sent_title;
 
         document.getElementById("add-artifact-text").textContent = t.add_artifact;
+        document.getElementById("create-receipt-text").textContent = t.create_receipt;
         document.getElementById("gallery-summary-text").textContent = t.gallery_summary;
         document.getElementById("sales-history-text").textContent = t.sales_history;
         document.getElementById("receipts-history-text").textContent = t.receipts_history;
@@ -592,7 +600,7 @@
         if (p.startsWith("http://") || p.startsWith("https://")) return p;
         // assumes main_image stores a Storage path
         try {
-          const out = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(p);
+          const out = supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(p);
           return out?.data?.publicUrl || null;
         } catch {
           return null;
@@ -842,6 +850,11 @@
       document.getElementById("add-artifact-btn").addEventListener("click", () => {
         // Assumption: you will create this page
         window.location.href = "add_artifact.html";
+      });
+
+      document.getElementById("create-receipt-btn").addEventListener("click", () => {
+        // Assumption: you will create this page
+        window.location.href = "create_receipt.html";
       });
 
       document.getElementById("gallery-summary-btn").addEventListener("click", () => {
