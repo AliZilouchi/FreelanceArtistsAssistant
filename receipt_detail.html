@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="fa" dir="rtl" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Receipt Detail | Honarapp</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { height: 100%; font-family: "Vazirmatn","Inter",sans-serif; }
+      body { background: linear-gradient(135deg, #1a1410 0%, #0a0a0a 100%); color: #fff; }
+      [dir="ltr"] body { font-family: "Inter", sans-serif; }
+
+      .page-wrapper { width: 100%; height: 100%; overflow-y: auto; padding: 2rem; }
+      .page-container { max-width: 1200px; margin: 0 auto; }
+
+      .top-bar{
+        display:flex; justify-content:space-between; align-items:center;
+        gap:1rem; flex-wrap:wrap; margin-bottom: 1.25rem;
+      }
+
+      .page-title{ font-size:2rem; font-weight:800; color:#d4af37; margin-bottom:.4rem; }
+      .page-subtitle{ color: rgba(255,255,255,.7); font-size:1rem; }
+
+      .language-toggle{
+        display:flex; gap:.5rem; background: rgba(255,255,255,.05);
+        border:1px solid rgba(212,175,55,.2); padding:.5rem; border-radius:999px;
+        backdrop-filter: blur(10px);
+      }
+      .lang-btn{
+        padding:.5rem 1.25rem; border:none; background:transparent;
+        color: rgba(255,255,255,.6); font-weight:700; cursor:pointer;
+        border-radius:999px; transition: .25s; font-family: inherit;
+      }
+      .lang-btn.active{ background: linear-gradient(135deg,#d4af37,#b8860b); color:#000; }
+
+      .action-bar{
+        display:flex; justify-content:space-between; align-items:center;
+        gap:1rem; flex-wrap:wrap; margin-bottom: 1.25rem;
+      }
+
+      .action-buttons{ display:flex; gap:.75rem; }
+      .action-btn{
+        padding:.875rem 1.5rem; border-radius:12px;
+        background: rgba(255,255,255,.05);
+        border:1px solid rgba(212,175,55,.2);
+        color:#fff; font-weight:700; cursor:pointer;
+        display:flex; gap:.5rem; align-items:center;
+        transition: .25s; font-family: inherit;
+      }
+      .action-btn:hover{
+        background: rgba(255,255,255,.08);
+        border-color: rgba(212,175,55,.4);
+        transform: translateY(-2px);
+      }
+      .action-btn.primary{
+        background: linear-gradient(135deg,#d4af37,#b8860b);
+        color:#000; border:none;
+      }
+
+      .pill{
+        display:inline-block; padding:.35rem .85rem; border-radius:999px;
+        border:1px solid rgba(212,175,55,.25);
+        background: rgba(255,255,255,.04);
+        color: rgba(255,255,255,.8);
+        font-weight:800; font-size:.85rem;
+        white-space: nowrap;
+      }
+      .mono{
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      }
+
+      .cards{
+        display:grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .card{
+        grid-column: span 3;
+        background: rgba(255,255,255,.05);
+        border:1px solid rgba(212,175,55,.2);
+        border-radius:16px;
+        padding: 1rem 1.1rem;
+        backdrop-filter: blur(10px);
+      }
+      .card.small{ grid-column: span 2; }
+      .card.wide{ grid-column: span 4; }
+
+      .card-label{ color: rgba(255,255,255,.6); font-size:.85rem; font-weight:700; }
+      .card-value{ margin-top:.35rem; font-size:1.1rem; font-weight:800; color:#fff; }
+      .card-value.gold{ color:#d4af37; }
+      .card-value.wrap{ word-break: break-word; }
+
+      .table-container{
+        background: rgba(255,255,255,.05);
+        border: 1px solid rgba(212,175,55,.2);
+        border-radius:16px;
+        overflow:hidden;
+        backdrop-filter: blur(10px);
+      }
+      .table-wrapper{ overflow-x:auto; }
+
+      table{ width:100%; border-collapse: collapse; }
+      thead{
+        background: rgba(212,175,55,.1);
+        border-bottom: 2px solid rgba(212,175,55,.3);
+      }
+      th{
+        padding: 1.1rem 1.25rem;
+        text-align:right;
+        color:#d4af37;
+        font-size:.85rem;
+        font-weight:800;
+        letter-spacing:.5px;
+        text-transform:uppercase;
+        white-space:nowrap;
+      }
+      [dir="ltr"] th{ text-align:left; }
+
+      tbody tr{ border-bottom:1px solid rgba(212,175,55,.1); transition:.2s; }
+      tbody tr:hover{ background: rgba(212,175,55,.05); }
+      td{
+        padding: 1.1rem 1.25rem;
+        text-align:right;
+        color: rgba(255,255,255,.9);
+        font-size:.95rem;
+        vertical-align: middle;
+      }
+      [dir="ltr"] td{ text-align:left; }
+
+      .artwork-cell{ display:flex; align-items:center; gap:.75rem; }
+      .thumb{
+        width:42px; height:42px; border-radius:10px;
+        border:1px solid rgba(212,175,55,.25);
+        background: rgba(255,255,255,.06);
+        overflow:hidden;
+        display:flex; align-items:center; justify-content:center;
+        flex:0 0 42px;
+        color: rgba(255,255,255,.75);
+        font-size: 1.1rem;
+      }
+      .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+      .art-title{ max-width: 360px; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; font-weight:800; }
+      .subtle{ margin-top:.15rem; font-size:.85rem; color: rgba(255,255,255,.65); }
+      .amount{ font-weight:900; color:#d4af37; white-space:nowrap; }
+
+      .empty{
+        padding: 2rem 1rem;
+        text-align:center;
+        color: rgba(255,255,255,.7);
+      }
+
+      .toast{
+        position: fixed;
+        bottom: 16px;
+        left: 16px;
+        padding: .75rem 1rem;
+        border-radius: 12px;
+        background: rgba(0,0,0,.6);
+        border: 1px solid rgba(212,175,55,.25);
+        color:#fff;
+        font-weight:800;
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        transform: translateY(8px);
+        transition: .25s;
+        pointer-events: none;
+      }
+      .toast.show{ opacity: 1; transform: translateY(0); }
+
+      @media (max-width: 1000px){
+        .card{ grid-column: span 6; }
+        .card.small{ grid-column: span 6; }
+        .card.wide{ grid-column: span 12; }
+      }
+      @media (max-width: 768px){
+        .page-wrapper{ padding: 1rem; }
+        .page-title{ font-size:1.5rem; }
+        th, td{ padding: .95rem .8rem; font-size:.85rem; }
+        .art-title{ max-width: 180px; }
+      }
+    </style>
+  </head>
+
+  <body class="h-full">
+    <div class="page-wrapper">
+      <div class="page-container">
+        <header class="top-bar">
+          <div>
+            <div style="display:flex; gap:.6rem; align-items:center; flex-wrap:wrap;">
+              <h1 class="page-title" id="page-title">جزئیات رسید</h1>
+              <span class="pill" id="type-pill">—</span>
+            </div>
+            <p class="page-subtitle" id="page-subtitle">نمایش آیتم‌های رسید</p>
+          </div>
+
+          <div class="language-toggle">
+            <button class="lang-btn" id="btn-fa">فارسی</button>
+            <button class="lang-btn" id="btn-en">English</button>
+          </div>
+        </header>
+
+        <div class="action-bar">
+          <div style="display:flex; gap:.75rem; align-items:center; flex-wrap:wrap;">
+            <span class="pill mono" id="receipt-pill">—</span>
+            <button class="action-btn" id="copy-btn" type="button">
+              <span>📋</span><span id="copy-text">کپی</span>
+            </button>
+          </div>
+
+          <div class="action-buttons">
+            <button class="action-btn" id="back-btn" type="button">
+              <span>←</span><span id="back-text">بازگشت</span>
+            </button>
+            <button class="action-btn primary" id="export-btn" type="button">
+              <span>📊</span><span id="export-text">خروجی</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Meta boxes -->
+        <section class="cards" id="meta-cards"></section>
+
+        <!-- Items table -->
+        <main class="table-container">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr id="thead-row"></tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+          <div class="empty" id="empty" style="display:none;">—</div>
+        </main>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">—</div>
+
+    <!-- Supabase UMD + your client/guard -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="./js/supabase.js"></script>
+    <script src="./js/guard.js"></script>
+
+    <script>
+      // -----------------------
+      // i18n
+      // -----------------------
+      const I18N = {
+        fa: {
+          title: "جزئیات رسید",
+          subtitle_sales: "رسید فروش (لیست آیتم‌ها)",
+          subtitle_gallery: "رسید ارسال به گالری (لیست آیتم‌ها)",
+          type_sales: "فروش",
+          type_gallery: "گالری",
+          back: "بازگشت",
+          copy: "کپی",
+          copied: "کپی شد ✅",
+          export: "خروجی Excel",
+          not_found: "هیچ اطلاعاتی برای این رسید پیدا نشد.",
+          receipt_id: "شناسه رسید",
+          receipt_date: "تاریخ",
+          buyer: "خریدار",
+          gallery: "گالری",
+          items: "تعداد آیتم‌ها",
+          total: "جمع",
+          dash: "—",
+          th_art: "اثر",
+          th_amount: "مبلغ",
+          th_note: "یادداشت",
+          th_channel: "کانال",
+          th_movement: "نوع حرکت",
+          channel_direct: "مستقیم",
+          channel_gallery: "گالری",
+          movement_sent: "ارسال",
+          movement_returned: "بازگشت",
+        },
+        en: {
+          title: "Receipt Detail",
+          subtitle_sales: "Sales receipt (items list)",
+          subtitle_gallery: "Gallery receipt (items list)",
+          type_sales: "Sales",
+          type_gallery: "Gallery",
+          back: "Back",
+          copy: "Copy",
+          copied: "Copied ✅",
+          export: "Export Excel",
+          not_found: "No data found for this receipt.",
+          receipt_id: "Receipt ID",
+          receipt_date: "Date",
+          buyer: "Buyer",
+          gallery: "Gallery",
+          items: "Items",
+          total: "Total",
+          dash: "—",
+          th_art: "Artwork",
+          th_amount: "Amount",
+          th_note: "Note",
+          th_channel: "Channel",
+          th_movement: "Movement",
+          channel_direct: "Direct",
+          channel_gallery: "Gallery",
+          movement_sent: "Sent",
+          movement_returned: "Returned",
+        },
+      };
+
+      function getLang(){
+        const v = localStorage.getItem("lang");
+        return v === "en" ? "en" : "fa";
+      }
+
+      function applyLang(lang){
+        const safe = lang === "en" ? "en" : "fa";
+        localStorage.setItem("lang", safe);
+
+        document.documentElement.lang = safe;
+        document.documentElement.dir = safe === "fa" ? "rtl" : "ltr";
+
+        document.getElementById("btn-fa").classList.toggle("active", safe === "fa");
+        document.getElementById("btn-en").classList.toggle("active", safe === "en");
+
+        const t = I18N[safe];
+        document.getElementById("page-title").textContent = t.title;
+        document.getElementById("back-text").textContent = t.back;
+        document.getElementById("copy-text").textContent = t.copy;
+        document.getElementById("export-text").textContent = t.export;
+      }
+
+      document.getElementById("btn-fa").addEventListener("click", () => { applyLang("fa"); boot(); });
+      document.getElementById("btn-en").addEventListener("click", () => { applyLang("en"); boot(); });
+
+      // -----------------------
+      // helpers
+      // -----------------------
+      function formatNumber(n){
+        const locale = getLang() === "fa" ? "fa-IR" : "en-GB";
+        return new Intl.NumberFormat(locale).format(Number(n || 0));
+      }
+      function formatMoney(n){
+        const symbol = localStorage.getItem("currencySymbol") || "$";
+        return symbol + formatNumber(n);
+      }
+      function formatDate(iso){
+        if (!iso) return I18N[getLang()].dash;
+        const d = new Date(iso);
+        if (getLang() === "fa"){
+          return new Intl.DateTimeFormat("fa-IR-u-ca-persian", { year:"numeric", month:"2-digit", day:"2-digit" }).format(d);
+        }
+        return new Intl.DateTimeFormat("en-GB", { year:"numeric", month:"2-digit", day:"2-digit" }).format(d);
+      }
+      function shortId(uuid){
+        if (!uuid) return "—";
+        const s = String(uuid);
+        return s.length > 14 ? (s.slice(0,8) + "…" + s.slice(-4)) : s;
+      }
+      function qs(){
+        const p = new URLSearchParams(location.search);
+        return {
+          type: (p.get("type") || "").toLowerCase(),
+          id: p.get("id"),
+        };
+      }
+      function showToast(msg){
+        const el = document.getElementById("toast");
+        el.textContent = msg;
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 1200);
+      }
+
+      const STORAGE_BUCKET = localStorage.getItem("storageBucket") || "artifacts";
+      function resolveImageUrl(path){
+        if (!path) return null;
+        const p = String(path);
+        if (p.startsWith("http://") || p.startsWith("https://")) return p;
+        try {
+          return window.supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(p).data.publicUrl || null;
+        } catch { return null; }
+      }
+
+      // -----------------------
+      // render
+      // -----------------------
+      function setTypeUI(type){
+        const t = I18N[getLang()];
+        const pill = document.getElementById("type-pill");
+        const sub = document.getElementById("page-subtitle");
+
+        if (type === "gallery"){
+          pill.textContent = t.type_gallery;
+          sub.textContent = t.subtitle_gallery;
+        } else {
+          pill.textContent = t.type_sales;
+          sub.textContent = t.subtitle_sales;
+        }
+      }
+
+      function renderMetaCards({ type, receiptId, date, buyerName, galleryName, itemsCount, totalAmount }){
+        const t = I18N[getLang()];
+        const wrap = document.getElementById("meta-cards");
+        wrap.innerHTML = "";
+
+        const cards = [];
+
+        cards.push({ label: t.receipt_date, value: formatDate(date), gold: false, span: "small" });
+        cards.push({ label: type === "gallery" ? t.gallery : t.buyer, value: (type === "gallery" ? (galleryName || t.dash) : (buyerName || t.dash)), gold: false, span: "wide" });
+        cards.push({ label: t.items, value: formatNumber(itemsCount || 0), gold: true, span: "small" });
+
+        if (type === "sales"){
+          cards.push({ label: t.total, value: formatMoney(totalAmount || 0), gold: true, span: "wide" });
+        } else {
+          cards.push({ label: t.total, value: t.dash, gold: false, span: "wide" });
+        }
+
+        // Receipt id card (full) if you want visible too
+        cards.push({ label: t.receipt_id, value: String(receiptId || ""), gold: false, span: "wide", mono: true });
+
+        for (const c of cards){
+          const el = document.createElement("div");
+          el.className = "card " + (c.span === "small" ? "small" : (c.span === "wide" ? "wide" : ""));
+          el.innerHTML = `
+            <div class="card-label">${c.label}</div>
+            <div class="card-value ${c.gold ? "gold" : ""} ${c.mono ? "mono wrap" : "wrap"}">${c.value || t.dash}</div>
+          `;
+          wrap.appendChild(el);
+        }
+      }
+
+      function renderThead(type){
+        const t = I18N[getLang()];
+        const tr = document.getElementById("thead-row");
+        tr.innerHTML = "";
+
+        const cols = (type === "gallery")
+          ? [t.th_art, t.th_movement, t.th_note]
+          : [t.th_art, t.th_amount, t.th_channel, t.th_note];
+
+        for (const c of cols){
+          const th = document.createElement("th");
+          th.textContent = c;
+          tr.appendChild(th);
+        }
+      }
+
+      function setEmpty(show, msg){
+        const empty = document.getElementById("empty");
+        const tbody = document.getElementById("tbody");
+        if (show){
+          tbody.innerHTML = "";
+          empty.style.display = "block";
+          empty.textContent = msg;
+        } else {
+          empty.style.display = "none";
+        }
+      }
+
+      function renderRows(type, rows){
+        const t = I18N[getLang()];
+        const tbody = document.getElementById("tbody");
+        tbody.innerHTML = "";
+
+        if (!rows || !rows.length){
+          setEmpty(true, t.not_found);
+          return;
+        }
+        setEmpty(false, "");
+
+        for (const r of rows){
+          const tr = document.createElement("tr");
+
+          // Artwork
+          const tdArt = document.createElement("td");
+          const wrap = document.createElement("div");
+          wrap.className = "artwork-cell";
+
+          const thumb = document.createElement("div");
+          thumb.className = "thumb";
+          const url = resolveImageUrl(r.artifact?.main_image);
+          if (url){
+            const img = document.createElement("img");
+            img.src = url;
+            img.alt = r.artifact?.title || "artwork";
+            thumb.appendChild(img);
+          } else {
+            thumb.textContent = "🎨";
+          }
+
+          const titleWrap = document.createElement("div");
+          const title = document.createElement("div");
+          title.className = "art-title";
+          title.textContent = r.artifact?.title || "—";
+
+          const sub = document.createElement("div");
+          sub.className = "subtle";
+          sub.textContent = formatDate(r.created_at);
+
+          titleWrap.appendChild(title);
+          titleWrap.appendChild(sub);
+
+          wrap.appendChild(thumb);
+          wrap.appendChild(titleWrap);
+          tdArt.appendChild(wrap);
+
+          // click to artifact page
+          tdArt.style.cursor = "pointer";
+          tdArt.addEventListener("click", () => {
+            if (r.artifact?.id) window.location.href = `artifact.html?id=${encodeURIComponent(r.artifact.id)}`;
+          });
+
+          tr.appendChild(tdArt);
+
+          if (type === "gallery"){
+            const tdMove = document.createElement("td");
+            const mv = r.movement_type || "";
+            tdMove.textContent = (mv === "returned") ? t.movement_returned : t.movement_sent;
+            tr.appendChild(tdMove);
+
+            const tdNote = document.createElement("td");
+            tdNote.textContent = r.notes || t.dash;
+            tr.appendChild(tdNote);
+          } else {
+            const tdAmt = document.createElement("td");
+            const span = document.createElement("span");
+            span.className = "amount";
+            span.textContent = formatMoney(r.amount);
+            tdAmt.appendChild(span);
+            tr.appendChild(tdAmt);
+
+            const tdCh = document.createElement("td");
+            tdCh.textContent = (r.sold_channel === "gallery") ? t.channel_gallery : t.channel_direct;
+            tr.appendChild(tdCh);
+
+            const tdNote = document.createElement("td");
+            tdNote.textContent = r.notes || t.dash;
+            tr.appendChild(tdNote);
+          }
+
+          tbody.appendChild(tr);
+        }
+      }
+
+      // -----------------------
+      // data loaders
+      // -----------------------
+      async function loadSalesReceipt(receiptId){
+        const { data, error } = await window.supabaseClient
+          .from("sales")
+          .select("id,created_at,amount,buyer_name,notes,sold_channel,artifact:artifacts(id,title,main_image)")
+          .eq("receipt_id", receiptId)
+          .order("created_at", { ascending: true });
+
+        if (error) throw error;
+        return data || [];
+      }
+
+      async function loadGalleryReceipt(receiptId){
+        const { data, error } = await window.supabaseClient
+          .from("gallery_movements")
+          .select("id,created_at,movement_type,gallery_name,notes,artifact:artifacts(id,title,main_image)")
+          .eq("receipt_id", receiptId)
+          .order("created_at", { ascending: true });
+
+        if (error) throw error;
+        return data || [];
+      }
+
+      function summarizeSales(rows){
+        const t = I18N[getLang()];
+        const date = rows[0]?.created_at || null;
+        const buyerName = rows.map(r => r.buyer_name).find(v => v && String(v).trim()) || null;
+        const totalAmount = rows.reduce((s,r) => s + Number(r.amount || 0), 0);
+        return { date, buyerName, galleryName: null, itemsCount: rows.length, totalAmount };
+      }
+
+      function summarizeGallery(rows){
+        const t = I18N[getLang()];
+        const date = rows[0]?.created_at || null;
+        const galleryName = rows.map(r => r.gallery_name).find(v => v && String(v).trim()) || null;
+        return { date, buyerName: null, galleryName, itemsCount: rows.length, totalAmount: null };
+      }
+
+      // -----------------------
+      // export CSV (optional but consistent with other pages)
+      // -----------------------
+      function toCsvValue(v){
+        const s = String(v ?? "");
+        if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+        return s;
+      }
+
+      async function exportCsv(type, receiptId){
+        const lang = getLang();
+        const t = I18N[lang];
+
+        if (type === "gallery"){
+          const rows = await loadGalleryReceipt(receiptId);
+          const header = (lang === "fa")
+            ? ["تاریخ", "اثر", "نوع حرکت", "یادداشت"]
+            : ["Date", "Artwork", "Movement", "Note"];
+
+          const lines = [];
+          lines.push(header.map(toCsvValue).join(","));
+          for (const r of rows){
+            lines.push([
+              formatDate(r.created_at),
+              r.artifact?.title || "",
+              (r.movement_type === "returned") ? t.movement_returned : t.movement_sent,
+              r.notes || ""
+            ].map(toCsvValue).join(","));
+          }
+
+          const csv = "\uFEFF" + lines.join("\n");
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `gallery_receipt_${receiptId}_${new Date().toISOString().slice(0,10)}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        } else {
+          const rows = await loadSalesReceipt(receiptId);
+          const header = (lang === "fa")
+            ? ["تاریخ", "اثر", "مبلغ", "کانال", "یادداشت"]
+            : ["Date", "Artwork", "Amount", "Channel", "Note"];
+
+          const lines = [];
+          lines.push(header.map(toCsvValue).join(","));
+          for (const r of rows){
+            lines.push([
+              formatDate(r.created_at),
+              r.artifact?.title || "",
+              String(r.amount ?? ""),
+              (r.sold_channel === "gallery") ? t.channel_gallery : t.channel_direct,
+              r.notes || ""
+            ].map(toCsvValue).join(","));
+          }
+
+          const csv = "\uFEFF" + lines.join("\n");
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `sales_receipt_${receiptId}_${new Date().toISOString().slice(0,10)}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        }
+      }
+
+      // -----------------------
+      // boot
+      // -----------------------
+      async function boot(){
+        applyLang(getLang());
+
+        if (!window.supabaseClient){
+          console.error("supabaseClient missing (script order).");
+          return;
+        }
+
+        const { id, type } = qs();
+        const t = I18N[getLang()];
+
+        if (!id){
+          setEmpty(true, t.not_found);
+          document.getElementById("receipt-pill").textContent = "—";
+          document.getElementById("type-pill").textContent = "—";
+          return;
+        }
+
+        document.getElementById("receipt-pill").textContent = shortId(id);
+
+        // determine type (switch case) + auto-detect fallback
+        let finalType = (type === "gallery" || type === "sales") ? type : "sales";
+
+        let rows = [];
+        try{
+          if (finalType === "sales"){
+            rows = await loadSalesReceipt(id);
+            if (!rows.length){
+              // auto-detect: try gallery
+              const g = await loadGalleryReceipt(id);
+              if (g.length){ finalType = "gallery"; rows = g; }
+            }
+          } else {
+            rows = await loadGalleryReceipt(id);
+            if (!rows.length){
+              // auto-detect: try sales
+              const s = await loadSalesReceipt(id);
+              if (s.length){ finalType = "sales"; rows = s; }
+            }
+          }
+        } catch (e){
+          console.error("[receipt_detail load]", e);
+          setEmpty(true, t.not_found);
+          return;
+        }
+
+        setTypeUI(finalType);
+        renderThead(finalType);
+
+        if (!rows.length){
+          setEmpty(true, t.not_found);
+          return;
+        }
+
+        const meta = (finalType === "gallery") ? summarizeGallery(rows) : summarizeSales(rows);
+        renderMetaCards({
+          type: finalType,
+          receiptId: id,
+          date: meta.date,
+          buyerName: meta.buyerName,
+          galleryName: meta.galleryName,
+          itemsCount: meta.itemsCount,
+          totalAmount: meta.totalAmount
+        });
+
+        renderRows(finalType, rows);
+
+        // wire buttons
+        document.getElementById("copy-btn").onclick = async () => {
+          try{
+            await navigator.clipboard.writeText(id);
+            showToast(t.copied);
+          } catch {
+            // fallback
+            const ta = document.createElement("textarea");
+            ta.value = id;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            ta.remove();
+            showToast(t.copied);
+          }
+        };
+
+        document.getElementById("export-btn").onclick = () => exportCsv(finalType, id).catch(console.error);
+      }
+
+      document.getElementById("back-btn").addEventListener("click", () => {
+        window.location.href = "receipts_history.html";
+      });
+
+      // initial render
+      boot().catch(console.error);
+    </script>
+
+    <!--
+      NOTES / ASSUMPTIONS:
+      1) URL params:
+         - receipt_detail.html?type=sales&id=<receipt_uuid>
+         - receipt_detail.html?type=gallery&id=<receipt_uuid>
+         If "type" is missing, the page auto-detects.
+      2) sales.receipt_id and gallery_movements.receipt_id exist and are filled.
+      3) artifacts.main_image is either a full URL OR a Storage path in bucket "artifacts".
+      4) Clicking artwork goes to artifact.html?id=<artifact_id> (change this if your page name differs).
+    -->
+  </body>
+</html>
