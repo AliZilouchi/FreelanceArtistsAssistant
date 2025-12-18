@@ -390,7 +390,7 @@
 
         // Optional: If you set an email confirmation redirect URL in Supabase Auth settings,
         // users will confirm and then land where you want.
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await supabaseClient.auth.signUp({
           email,
           password,
           options: {

@@ -550,7 +550,7 @@
           return;
         }
 
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
         if (error) {
           showError(friendlyAuthError(error.message));
