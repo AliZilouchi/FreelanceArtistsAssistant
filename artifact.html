@@ -1,0 +1,1356 @@
+<!doctype html>
+<html lang="fa" dir="rtl" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Artifact Details | Honarapp</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
+      body { box-sizing: border-box; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html, body {
+        height: 100%;
+        font-family: "Vazirmatn", "Inter", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a1410 0%, #0a0a0a 100%);
+        color: #ffffff;
+      }
+
+      [dir="ltr"] body { font-family: "Inter", sans-serif; }
+
+      .artifact-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        padding: 2rem;
+      }
+
+      .artifact-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+      }
+
+      .language-toggle {
+        display: flex;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem;
+        border-radius: 50px;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+      }
+
+      .lang-btn {
+        padding: 0.5rem 1.25rem;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      .lang-btn.active {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+      }
+
+      .back-btn {
+        padding: 0.65rem 1rem;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 12px;
+        color: rgba(255,255,255,0.85);
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: 700;
+        transition: all 0.25s ease;
+      }
+      .back-btn:hover {
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(212,175,55,0.4);
+        transform: translateY(-2px);
+      }
+
+      .artifact-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .artifact-image-container {
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(184, 134, 11, 0.15));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .artifact-image-placeholder {
+        font-size: 6rem;
+        opacity: 0.7;
+      }
+
+      .artifact-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .artifact-content {
+        padding: 2rem;
+      }
+
+      .artifact-header {
+        margin-bottom: 1.5rem;
+      }
+
+      .artifact-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #d4af37;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+      }
+
+      .artifact-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.25rem;
+        border-radius: 25px;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+
+      .status-in-progress {
+        background: rgba(33, 150, 243, 0.2);
+        color: #2196f3;
+        border: 1px solid rgba(33, 150, 243, 0.3);
+      }
+
+      .status-ready {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+        border: 1px solid rgba(76, 175, 80, 0.3);
+      }
+
+      .status-sent {
+        background: rgba(156, 39, 176, 0.2);
+        color: #9c27b0;
+        border: 1px solid rgba(156, 39, 176, 0.3);
+      }
+
+      .status-sold {
+        background: rgba(212, 175, 55, 0.2);
+        color: #d4af37;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+      }
+
+      .artifact-description {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(212, 175, 55, 0.1);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .description-text {
+        font-size: 1rem;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.85);
+        white-space: pre-wrap;
+      }
+
+      .artifact-dates {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .date-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(212, 175, 55, 0.1);
+        border-radius: 12px;
+        padding: 1.25rem;
+      }
+
+      .date-label {
+        font-size: 0.8125rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .date-value {
+        font-size: 1.125rem;
+        color: #d4af37;
+        font-weight: 600;
+        direction: ltr;
+        text-align: right;
+      }
+
+      [dir="ltr"] .date-value { text-align: left; }
+
+      .control-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .control-btn {
+        padding: 1rem;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border: none;
+      }
+
+      .btn-edit {
+        background: rgba(33, 150, 243, 0.15);
+        color: #2196f3;
+        border: 1px solid rgba(33, 150, 243, 0.3);
+      }
+      .btn-edit:hover { background: rgba(33, 150, 243, 0.25); transform: translateY(-2px); }
+
+      .btn-delete {
+        background: rgba(244, 67, 54, 0.15);
+        color: #f44336;
+        border: 1px solid rgba(244, 67, 54, 0.3);
+      }
+      .btn-delete:hover { background: rgba(244, 67, 54, 0.25); transform: translateY(-2px); }
+
+      .btn-send {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+        border: none;
+      }
+      .btn-send:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); }
+
+      .sale-section {
+        background: rgba(212, 175, 55, 0.1);
+        border: 2px solid rgba(212, 175, 55, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .sale-info { flex: 1; min-width: 200px; }
+      .sale-label {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+      .sale-details { font-size: 1.125rem; color: #d4af37; font-weight: 600; }
+      .sale-price { font-size: 1.5rem; margin-left: 0.5rem; }
+      [dir="ltr"] .sale-price { margin-left: 0; margin-right: 0.5rem; }
+
+      .sale-action { flex-shrink: 0; }
+
+      .btn-view-sale {
+        padding: 0.875rem 1.75rem;
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .btn-view-sale:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); }
+
+      .hidden { display: none !important; }
+
+      /* Modal */
+      .modal-backdrop {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        z-index: 9999;
+      }
+      .modal-backdrop.show { display: flex; }
+
+      .modal {
+        width: 100%;
+        max-width: 520px;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(212,175,55,0.25);
+        border-radius: 16px;
+        backdrop-filter: blur(12px);
+        padding: 1.25rem;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      }
+
+      .modal-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #d4af37;
+        margin-bottom: 0.6rem;
+      }
+      .modal-text {
+        color: rgba(255,255,255,0.75);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+      }
+
+      .field {
+        margin-bottom: 0.9rem;
+      }
+      .field label {
+        display: block;
+        margin-bottom: 0.35rem;
+        color: rgba(255,255,255,0.7);
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+      .field input, .field textarea {
+        width: 100%;
+        padding: 0.8rem 0.9rem;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(212,175,55,0.2);
+        color: #fff;
+        font-family: inherit;
+        font-size: 0.95rem;
+      }
+      .field textarea { min-height: 120px; resize: vertical; }
+      .field input:focus, .field textarea:focus {
+        outline: none;
+        border-color: rgba(212,175,55,0.45);
+        background: rgba(255,255,255,0.08);
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 0.85rem 1.2rem;
+        border-radius: 12px;
+        font-weight: 800;
+        border: 1px solid rgba(212,175,55,0.25);
+        background: rgba(255,255,255,0.05);
+        color: rgba(255,255,255,0.9);
+        cursor: pointer;
+        font-family: inherit;
+        transition: 0.25s;
+      }
+      .btn:hover { transform: translateY(-2px); background: rgba(255,255,255,0.08); }
+      .btn.primary {
+        border: none;
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+      }
+      .btn.danger {
+        border-color: rgba(244,67,54,0.4);
+        background: rgba(244,67,54,0.12);
+        color: #ffb3ae;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 16px;
+        left: 16px;
+        padding: .75rem 1rem;
+        border-radius: 12px;
+        background: rgba(0,0,0,.6);
+        border: 1px solid rgba(212,175,55,.25);
+        color:#fff;
+        font-weight:800;
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        transform: translateY(8px);
+        transition: .25s;
+        pointer-events: none;
+        z-index: 10000;
+      }
+      .toast.show { opacity: 1; transform: translateY(0); }
+
+      @media (max-width: 768px) {
+        .artifact-wrapper { padding: 1rem; }
+        .artifact-image-container { height: 300px; }
+        .artifact-image-placeholder { font-size: 4rem; }
+        .artifact-content { padding: 1.5rem; }
+        .artifact-title { font-size: 1.5rem; }
+        .control-buttons { grid-template-columns: 1fr; }
+        .sale-section { flex-direction: column; align-items: stretch; }
+        .btn-view-sale { width: 100%; justify-content: center; }
+      }
+    </style>
+  </head>
+
+  <body class="h-full">
+    <div class="artifact-wrapper">
+      <div class="artifact-container">
+        <header class="top-bar">
+          <button class="back-btn" id="back-btn">←</button>
+
+          <div class="language-toggle">
+            <button class="lang-btn" data-lang="fa" id="btn-fa">فارسی</button>
+            <button class="lang-btn" data-lang="en" id="btn-en">English</button>
+          </div>
+        </header>
+
+        <main class="artifact-card">
+          <div class="artifact-image-container" id="image-box">
+            <div class="artifact-image-placeholder" id="image-placeholder">🎨</div>
+          </div>
+
+          <div class="artifact-content">
+            <div class="artifact-header">
+              <h1 class="artifact-title" id="artifact-title">—</h1>
+              <div class="artifact-status status-ready" id="status-badge">
+                <span id="status-icon">✓</span>
+                <span id="status-text">—</span>
+              </div>
+            </div>
+
+            <div class="artifact-description">
+              <p class="description-text" id="description-text">—</p>
+            </div>
+
+            <div class="artifact-dates">
+              <div class="date-item">
+                <div class="date-label" id="created-label">—</div>
+                <div class="date-value" id="created-value">—</div>
+              </div>
+              <div class="date-item">
+                <div class="date-label" id="updated-label">—</div>
+                <div class="date-value" id="updated-value">—</div>
+              </div>
+            </div>
+
+            <!-- Buttons (we show/hide based on status) -->
+            <div class="control-buttons">
+              <button class="control-btn btn-edit" id="edit-btn">
+                <span>✏️</span> <span id="edit-text">—</span>
+              </button>
+
+              <button class="control-btn btn-delete" id="delete-btn">
+                <span>🗑️</span> <span id="delete-text">—</span>
+              </button>
+
+              <button class="control-btn btn-send hidden" id="finish-btn">
+                <span>✅</span> <span id="finish-text">—</span>
+              </button>
+
+              <button class="control-btn btn-edit hidden" id="return-btn">
+                <span>↩️</span> <span id="return-text">—</span>
+              </button>
+
+              <button class="control-btn btn-send hidden" id="sold-gallery-btn">
+                <span>💰</span> <span id="sold-gallery-text">—</span>
+              </button>
+            </div>
+
+            <!-- Record section (sale record OR gallery record) -->
+            <div class="sale-section hidden" id="record-section">
+              <div class="sale-info">
+                <div class="sale-label" id="record-label">—</div>
+                <div class="sale-details" id="record-details">
+                  <span id="record-main">—</span>
+                  <span class="sale-price" id="record-amount"></span>
+                </div>
+              </div>
+              <div class="sale-action">
+                <button class="btn-view-sale" id="view-record-btn">
+                  <span>👁️</span> <span id="view-record-text">—</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Delete confirm modal -->
+    <div class="modal-backdrop" id="delete-modal">
+      <div class="modal">
+        <div class="modal-title" id="delete-title">—</div>
+        <div class="modal-text" id="delete-text2">—</div>
+        <div class="modal-actions">
+          <button class="btn" id="delete-cancel">—</button>
+          <button class="btn danger" id="delete-confirm">—</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finish confirm modal -->
+    <div class="modal-backdrop" id="finish-modal">
+      <div class="modal">
+        <div class="modal-title" id="finish-title">—</div>
+        <div class="modal-text" id="finish-text2">—</div>
+        <div class="modal-actions">
+          <button class="btn" id="finish-cancel">—</button>
+          <button class="btn primary" id="finish-confirm">—</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Return modal -->
+    <div class="modal-backdrop" id="return-modal">
+      <div class="modal">
+        <div class="modal-title" id="return-title">—</div>
+        <div class="modal-text" id="return-text2">—</div>
+
+        <div class="field">
+          <label id="return-notes-label">—</label>
+          <textarea id="return-notes" placeholder=""></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn" id="return-cancel">—</button>
+          <button class="btn primary" id="return-confirm">—</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sold in gallery modal -->
+    <div class="modal-backdrop" id="sold-modal">
+      <div class="modal">
+        <div class="modal-title" id="sold-title">—</div>
+        <div class="modal-text" id="sold-text2">—</div>
+
+        <div class="field">
+          <label id="sold-amount-label">—</label>
+          <input id="sold-amount" type="number" min="0" step="1" placeholder="" />
+        </div>
+
+        <div class="field">
+          <label id="sold-notes-label">—</label>
+          <textarea id="sold-notes" placeholder=""></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn" id="sold-cancel">—</button>
+          <button class="btn primary" id="sold-confirm">—</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit modal (image + description) -->
+    <div class="modal-backdrop" id="edit-modal">
+      <div class="modal">
+        <div class="modal-title" id="edit-title">—</div>
+        <div class="modal-text" id="edit-text2">—</div>
+
+        <div class="field">
+          <label id="edit-desc-label">—</label>
+          <textarea id="edit-desc"></textarea>
+        </div>
+
+        <div class="field">
+          <label id="edit-image-label">—</label>
+          <input id="edit-image" type="file" accept="image/*" />
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn" id="edit-cancel">—</button>
+          <button class="btn primary" id="edit-save">—</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">—</div>
+
+    <!-- Supabase + your shared scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="./js/supabase.js"></script>
+    <script src="./js/guard.js"></script>
+
+    <script>
+      // -----------------------
+      // i18n
+      // -----------------------
+      const I18N = {
+        fa: {
+          back: "بازگشت",
+          created: "تاریخ ایجاد",
+          updated: "آخرین بروزرسانی",
+          edit: "ویرایش",
+          del: "حذف",
+          finish: "اتمام (آماده)",
+          returned: "بازگشت از گالری",
+          soldInGallery: "فروش در گالری",
+
+          st_in: "در حال انجام",
+          st_ready: "آماده",
+          st_sent: "ارسال به گالری",
+          st_sold: "فروخته شده",
+
+          record_sale: "فروش ثبت‌شده",
+          record_gallery: "ثبت گالری",
+          view_sale: "مشاهده فروش",
+          view_receipt: "مشاهده رسید",
+
+          dash: "—",
+
+          del_title: "حذف اثر",
+          del_body: "مطمئنی می‌خوای این اثر رو حذف کنی؟ این کار برگشت‌پذیر نیست.",
+          cancel: "انصراف",
+          confirm_delete: "حذف کن",
+
+          finish_title: "اتمام اثر",
+          finish_body: "با این کار وضعیت اثر از «در حال انجام» به «آماده» تغییر می‌کند.",
+          confirm_finish: "تایید",
+
+          return_title: "بازگشت از گالری",
+          return_body: "یادداشت (اختیاری) را وارد کن و تایید کن.",
+          notes: "یادداشت",
+          confirm_return: "ثبت بازگشت",
+
+          sold_title: "فروش در گالری",
+          sold_body: "مبلغ فروش را وارد کن. یادداشت اختیاری است.",
+          amount: "مبلغ",
+          confirm_sold: "ثبت فروش",
+
+          edit_title: "ویرایش اثر",
+          edit_body: "توضیحات و/یا تصویر را تغییر بده.",
+          desc: "توضیحات",
+          image: "تصویر",
+          save: "ذخیره",
+
+          saved: "ذخیره شد ✅",
+          done: "انجام شد ✅",
+          err: "خطا: ",
+          missingId: "شناسه اثر در URL وجود ندارد (artifact.html?id=...)",
+        },
+        en: {
+          back: "Back",
+          created: "Created",
+          updated: "Last updated",
+          edit: "Edit",
+          del: "Delete",
+          finish: "Finish (Ready)",
+          returned: "Returned from gallery",
+          soldInGallery: "Sold in gallery",
+
+          st_in: "In progress",
+          st_ready: "Ready",
+          st_sent: "Sent to gallery",
+          st_sold: "Sold",
+
+          record_sale: "Sale record",
+          record_gallery: "Gallery record",
+          view_sale: "View sale",
+          view_receipt: "View receipt",
+
+          dash: "—",
+
+          del_title: "Delete artifact",
+          del_body: "Are you sure you want to delete this artifact? This cannot be undone.",
+          cancel: "Cancel",
+          confirm_delete: "Delete",
+
+          finish_title: "Finish artifact",
+          finish_body: "This changes status from “In progress” to “Ready”.",
+          confirm_finish: "Confirm",
+
+          return_title: "Return from gallery",
+          return_body: "Add optional notes, then confirm.",
+          notes: "Notes",
+          confirm_return: "Record return",
+
+          sold_title: "Sold in gallery",
+          sold_body: "Enter sold amount. Notes are optional.",
+          amount: "Amount",
+          confirm_sold: "Record sale",
+
+          edit_title: "Edit artifact",
+          edit_body: "Update description and/or image.",
+          desc: "Description",
+          image: "Image",
+          save: "Save",
+
+          saved: "Saved ✅",
+          done: "Done ✅",
+          err: "Error: ",
+          missingId: "Missing artifact id in URL (artifact.html?id=...)",
+        },
+      };
+
+      function getLang() {
+        const v = localStorage.getItem("lang");
+        return v === "en" ? "en" : "fa";
+      }
+
+      function applyLang(lang) {
+        const safe = lang === "en" ? "en" : "fa";
+        localStorage.setItem("lang", safe);
+
+        document.documentElement.lang = safe;
+        document.documentElement.dir = safe === "fa" ? "rtl" : "ltr";
+
+        document.getElementById("btn-fa").classList.toggle("active", safe === "fa");
+        document.getElementById("btn-en").classList.toggle("active", safe === "en");
+
+        const t = I18N[safe];
+        document.getElementById("back-btn").textContent = (safe === "fa") ? "← " + t.back : t.back + " →";
+
+        document.getElementById("created-label").textContent = t.created;
+        document.getElementById("updated-label").textContent = t.updated;
+
+        document.getElementById("edit-text").textContent = t.edit;
+        document.getElementById("delete-text").textContent = t.del;
+        document.getElementById("finish-text").textContent = t.finish;
+        document.getElementById("return-text").textContent = t.returned;
+        document.getElementById("sold-gallery-text").textContent = t.soldInGallery;
+
+        document.getElementById("delete-title").textContent = t.del_title;
+        document.getElementById("delete-text2").textContent = t.del_body;
+        document.getElementById("delete-cancel").textContent = t.cancel;
+        document.getElementById("delete-confirm").textContent = t.confirm_delete;
+
+        document.getElementById("finish-title").textContent = t.finish_title;
+        document.getElementById("finish-text2").textContent = t.finish_body;
+        document.getElementById("finish-cancel").textContent = t.cancel;
+        document.getElementById("finish-confirm").textContent = t.confirm_finish;
+
+        document.getElementById("return-title").textContent = t.return_title;
+        document.getElementById("return-text2").textContent = t.return_body;
+        document.getElementById("return-notes-label").textContent = t.notes;
+        document.getElementById("return-cancel").textContent = t.cancel;
+        document.getElementById("return-confirm").textContent = t.confirm_return;
+
+        document.getElementById("sold-title").textContent = t.sold_title;
+        document.getElementById("sold-text2").textContent = t.sold_body;
+        document.getElementById("sold-amount-label").textContent = t.amount;
+        document.getElementById("sold-notes-label").textContent = t.notes;
+        document.getElementById("sold-cancel").textContent = t.cancel;
+        document.getElementById("sold-confirm").textContent = t.confirm_sold;
+
+        document.getElementById("edit-title").textContent = t.edit_title;
+        document.getElementById("edit-text2").textContent = t.edit_body;
+        document.getElementById("edit-desc-label").textContent = t.desc;
+        document.getElementById("edit-image-label").textContent = t.image;
+        document.getElementById("edit-cancel").textContent = t.cancel;
+        document.getElementById("edit-save").textContent = t.save;
+      }
+
+      document.getElementById("btn-fa").addEventListener("click", () => { applyLang("fa"); boot(); });
+      document.getElementById("btn-en").addEventListener("click", () => { applyLang("en"); boot(); });
+
+      // -----------------------
+      // helpers
+      // -----------------------
+      function qs() {
+        const p = new URLSearchParams(location.search);
+        return { id: p.get("id") };
+      }
+
+      function showToast(msg) {
+        const el = document.getElementById("toast");
+        el.textContent = msg;
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 1200);
+      }
+
+      function openModal(id) { document.getElementById(id).classList.add("show"); }
+      function closeModal(id) { document.getElementById(id).classList.remove("show"); }
+
+      function formatDate(iso) {
+        const t = I18N[getLang()];
+        if (!iso) return t.dash;
+        const d = new Date(iso);
+        if (getLang() === "fa") {
+          return new Intl.DateTimeFormat("fa-IR-u-ca-persian", { year:"numeric", month:"2-digit", day:"2-digit" }).format(d);
+        }
+        return new Intl.DateTimeFormat("en-GB", { year:"numeric", month:"2-digit", day:"2-digit" }).format(d);
+      }
+
+      function formatNumber(n) {
+        const locale = getLang() === "fa" ? "fa-IR" : "en-GB";
+        return new Intl.NumberFormat(locale).format(Number(n || 0));
+      }
+
+      function formatMoney(n) {
+        const symbol = localStorage.getItem("currencySymbol") || "$";
+        return symbol + formatNumber(n);
+      }
+
+      const STORAGE_BUCKET = localStorage.getItem("storageBucket") || "artifacts";
+      function resolveImageUrl(path) {
+        if (!path) return null;
+        const p = String(path);
+        if (p.startsWith("http://") || p.startsWith("https://")) return p;
+        try {
+          return window.supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(p).data.publicUrl || null;
+        } catch {
+          return null;
+        }
+      }
+
+      async function callFn(name, body) {
+        // tries Edge Function, but doesn't crash if it doesn't exist
+        try {
+          const res = await window.supabaseClient.functions.invoke(name, { body });
+          if (res.error) throw res.error;
+          return { ok: true, data: res.data };
+        } catch (e) {
+          return { ok: false, error: e };
+        }
+      }
+
+      // -----------------------
+      // UI mapping based on status
+      // -----------------------
+      function setStatusUI(status) {
+        const t = I18N[getLang()];
+        const badge = document.getElementById("status-badge");
+        const icon = document.getElementById("status-icon");
+        const text = document.getElementById("status-text");
+
+        badge.classList.remove("status-in-progress","status-ready","status-sent","status-sold");
+
+        if (status === "in_progress") {
+          badge.classList.add("status-in-progress");
+          icon.textContent = "⏳";
+          text.textContent = t.st_in;
+        } else if (status === "ready") {
+          badge.classList.add("status-ready");
+          icon.textContent = "✓";
+          text.textContent = t.st_ready;
+        } else if (status === "sent_to_gallery") {
+          badge.classList.add("status-sent");
+          icon.textContent = "📦";
+          text.textContent = t.st_sent;
+        } else if (status === "sold") {
+          badge.classList.add("status-sold");
+          icon.textContent = "★";
+          text.textContent = t.st_sold;
+        } else {
+          badge.classList.add("status-ready");
+          icon.textContent = "✓";
+          text.textContent = status || t.dash;
+        }
+      }
+
+      function setButtonsForStatus(status) {
+        // required mapping from your message
+        const editBtn = document.getElementById("edit-btn");
+        const deleteBtn = document.getElementById("delete-btn");
+        const finishBtn = document.getElementById("finish-btn");
+        const returnBtn = document.getElementById("return-btn");
+        const soldBtn = document.getElementById("sold-gallery-btn");
+
+        // default hide all optional
+        finishBtn.classList.add("hidden");
+        returnBtn.classList.add("hidden");
+        soldBtn.classList.add("hidden");
+
+        // Edit only for in_progress + ready (as you asked)
+        editBtn.classList.toggle("hidden", !(status === "in_progress" || status === "ready"));
+
+        // Delete always
+        deleteBtn.classList.remove("hidden");
+
+        if (status === "in_progress") {
+          finishBtn.classList.remove("hidden");
+        }
+
+        if (status === "sent_to_gallery") {
+          returnBtn.classList.remove("hidden");
+          soldBtn.classList.remove("hidden");
+        }
+      }
+
+      function setRecordSectionHidden(hidden) {
+        document.getElementById("record-section").classList.toggle("hidden", !!hidden);
+      }
+
+      // -----------------------
+      // Data loading
+      // -----------------------
+      async function loadArtifact(artifactId, userId) {
+        const { data, error } = await window.supabaseClient
+          .from("artifacts")
+          .select("id,user_id,title,description,main_image,status,created_at,updated_at")
+          .eq("id", artifactId)
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        if (error) throw error;
+        return data;
+      }
+
+      async function loadLastSale(artifactId, userId) {
+        const { data, error } = await window.supabaseClient
+          .from("sales")
+          .select("id,created_at,amount,buyer_name,notes,sold_channel,receipt_id,gallery_id")
+          .eq("artifact_id", artifactId)
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (error) throw error;
+        return (data && data[0]) ? data[0] : null;
+      }
+
+      async function loadLastSentMovement(artifactId, userId) {
+        const { data, error } = await window.supabaseClient
+          .from("gallery_movements")
+          .select("id,created_at,gallery_name,notes,receipt_id,movement_type")
+          .eq("artifact_id", artifactId)
+          .eq("user_id", userId)
+          .eq("movement_type", "sent")
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (error) throw error;
+        return (data && data[0]) ? data[0] : null;
+      }
+
+      // -----------------------
+      // Actions
+      // -----------------------
+      async function actionFinish(artifact) {
+        // Prefer edge function, fallback to direct update
+        const fn = await callFn("artifact-upsert", { id: artifact.id, status: "ready" });
+
+        if (!fn.ok) {
+          const { error } = await window.supabaseClient
+            .from("artifacts")
+            .update({ status: "ready" })
+            .eq("id", artifact.id);
+          if (error) throw error;
+        }
+      }
+
+      async function actionDelete(artifact) {
+        // Prefer edge function, fallback to direct delete
+        const fn = await callFn("artifact-delete", { artifact_id: artifact.id });
+
+        if (!fn.ok) {
+          const { error } = await window.supabaseClient
+            .from("artifacts")
+            .delete()
+            .eq("id", artifact.id);
+          if (error) throw error;
+        }
+      }
+
+      async function actionReturnFromGallery(artifact, notes) {
+        // Prefer edge function, fallback = insert return movement + set status ready
+        const fn = await callFn("gallery_return", { artifact_id: artifact.id, notes: notes || null });
+
+        if (!fn.ok) {
+          const { data: u } = await window.supabaseClient.auth.getUser();
+          const user = u.user;
+
+          // Use last sent movement's gallery_name as fallback context
+          const lastSent = await loadLastSentMovement(artifact.id, user.id);
+          const gallery_name = lastSent?.gallery_name || null;
+
+          const { error: e1 } = await window.supabaseClient
+            .from("gallery_movements")
+            .insert({
+              user_id: user.id,
+              artifact_id: artifact.id,
+              movement_type: "returned",
+              gallery_name,
+              notes: notes || null,
+              receipt_id: crypto.randomUUID(), // keep receipt_id non-null if your schema requires it
+            });
+
+          if (e1) throw e1;
+
+          const { error: e2 } = await window.supabaseClient
+            .from("artifacts")
+            .update({ status: "ready" })
+            .eq("id", artifact.id);
+
+          if (e2) throw e2;
+        }
+      }
+
+      async function actionSoldInGallery(artifact, amount, notes) {
+        const amt = Number(amount);
+        if (!Number.isFinite(amt) || amt <= 0) throw new Error("amount");
+
+        // Prefer edge function
+        const fn = await callFn("gallery_sale", {
+          artifact_id: artifact.id,
+          amount: amt,
+          notes: notes || null,
+        });
+
+        if (!fn.ok) {
+          const { data: u } = await window.supabaseClient.auth.getUser();
+          const user = u.user;
+
+          const lastSent = await loadLastSentMovement(artifact.id, user.id);
+          if (!lastSent) throw new Error("missing_last_sent");
+
+          const receipt_id = crypto.randomUUID();
+
+          // sales.gallery_id points to gallery_movements.id (sent movement)
+          const { error: e1 } = await window.supabaseClient
+            .from("sales")
+            .insert({
+              user_id: user.id,
+              artifact_id: artifact.id,
+              amount: amt,
+              notes: notes || null,
+              sold_channel: "gallery",
+              gallery_id: lastSent.id,
+              buyer_name: null,
+              receipt_id,
+            });
+
+          if (e1) throw e1;
+
+          const { error: e2 } = await window.supabaseClient
+            .from("artifacts")
+            .update({ status: "sold" })
+            .eq("id", artifact.id);
+
+          if (e2) throw e2;
+        }
+      }
+
+      async function actionEdit(artifact, newDesc, file) {
+        const { data: u } = await window.supabaseClient.auth.getUser();
+        const user = u.user;
+
+        let newImagePath = null;
+
+        if (file) {
+          const safeName = String(file.name || "image").replace(/[^\w.\-]+/g, "_");
+          const path = `${user.id}/${artifact.id}/${Date.now()}_${safeName}`;
+
+          const up = await window.supabaseClient.storage
+            .from(STORAGE_BUCKET)
+            .upload(path, file, { upsert: true });
+
+          if (up.error) throw up.error;
+          newImagePath = path;
+        }
+
+        const payload = {};
+        if (typeof newDesc === "string") payload.description = newDesc;
+        if (newImagePath) payload.main_image = newImagePath;
+
+        // Prefer edge function
+        const fn = await callFn("artifact-upsert", { id: artifact.id, ...payload });
+
+        if (!fn.ok) {
+          const { error } = await window.supabaseClient
+            .from("artifacts")
+            .update(payload)
+            .eq("id", artifact.id);
+
+          if (error) throw error;
+        }
+      }
+
+      // -----------------------
+      // Render
+      // -----------------------
+      function renderArtifact(artifact) {
+        const t = I18N[getLang()];
+        document.getElementById("artifact-title").textContent = artifact.title || t.dash;
+        document.getElementById("description-text").textContent = artifact.description || t.dash;
+
+        document.getElementById("created-value").textContent = formatDate(artifact.created_at);
+        document.getElementById("updated-value").textContent = formatDate(artifact.updated_at);
+
+        setStatusUI(artifact.status);
+        setButtonsForStatus(artifact.status);
+
+        // image
+        const box = document.getElementById("image-box");
+        const placeholder = document.getElementById("image-placeholder");
+        const url = resolveImageUrl(artifact.main_image);
+
+        // clear previous
+        const oldImg = box.querySelector("img");
+        if (oldImg) oldImg.remove();
+
+        if (url) {
+          placeholder.classList.add("hidden");
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = artifact.title || "artifact";
+          box.appendChild(img);
+        } else {
+          placeholder.classList.remove("hidden");
+        }
+      }
+
+      async function renderRecordSection(artifact, userId) {
+        const t = I18N[getLang()];
+        const label = document.getElementById("record-label");
+        const main = document.getElementById("record-main");
+        const amountEl = document.getElementById("record-amount");
+        const btn = document.getElementById("view-record-btn");
+        const btnText = document.getElementById("view-record-text");
+
+        // default hidden
+        setRecordSectionHidden(true);
+        btn.onclick = null;
+
+        if (artifact.status === "sold") {
+          const sale = await loadLastSale(artifact.id, userId);
+          if (!sale) return;
+
+          setRecordSectionHidden(false);
+          label.textContent = t.record_sale;
+
+          const who = sale.buyer_name ? ` • ${sale.buyer_name}` : "";
+          main.textContent = `${formatDate(sale.created_at)}${who}`;
+          amountEl.textContent = formatMoney(sale.amount);
+
+          btnText.textContent = t.view_sale;
+          btn.onclick = () => {
+            // assumption: you will have sale_detail.html
+            window.location.href = `sale_detail.html?id=${encodeURIComponent(sale.id)}`;
+          };
+          return;
+        }
+
+        if (artifact.status === "sent_to_gallery") {
+          const sent = await loadLastSentMovement(artifact.id, userId);
+          if (!sent) return;
+
+          setRecordSectionHidden(false);
+          label.textContent = t.record_gallery;
+
+          main.textContent = `${sent.gallery_name || t.dash} • ${formatDate(sent.created_at)}`;
+          amountEl.textContent = "";
+
+          btnText.textContent = t.view_receipt;
+          btn.onclick = () => {
+            if (sent.receipt_id) {
+              window.location.href = `receipt_detail.html?type=gallery&id=${encodeURIComponent(sent.receipt_id)}`;
+            }
+          };
+        }
+      }
+
+      // -----------------------
+      // Boot
+      // -----------------------
+      let currentArtifact = null;
+
+      async function boot() {
+        applyLang(getLang());
+
+        const sb = window.supabaseClient;
+        const t = I18N[getLang()];
+
+        const { id } = qs();
+        if (!id) {
+          showToast(t.missingId);
+          return;
+        }
+
+        const { data: u } = await sb.auth.getUser();
+        const user = u.user;
+        if (!user) return;
+
+        try {
+          const artifact = await loadArtifact(id, user.id);
+          if (!artifact) {
+            showToast(t.err + "not found");
+            return;
+          }
+
+          currentArtifact = artifact;
+          renderArtifact(artifact);
+          await renderRecordSection(artifact, user.id);
+
+          // prefill edit modal
+          document.getElementById("edit-desc").value = artifact.description || "";
+
+        } catch (e) {
+          console.error("[artifact boot]", e);
+          showToast(t.err + (e?.message || "unknown"));
+        }
+      }
+
+      // -----------------------
+      // Events
+      // -----------------------
+      document.getElementById("back-btn").addEventListener("click", () => {
+        // You can change this to any list page you want
+        window.location.href = "dashboard.html";
+      });
+
+      // Delete
+      document.getElementById("delete-btn").addEventListener("click", () => openModal("delete-modal"));
+      document.getElementById("delete-cancel").addEventListener("click", () => closeModal("delete-modal"));
+      document.getElementById("delete-confirm").addEventListener("click", async () => {
+        const t = I18N[getLang()];
+        try {
+          if (!currentArtifact) return;
+          await actionDelete(currentArtifact);
+          closeModal("delete-modal");
+          showToast(t.done);
+          window.location.href = "dashboard.html";
+        } catch (e) {
+          console.error("[delete]", e);
+          showToast(t.err + (e?.message || "delete"));
+        }
+      });
+
+      // Finish
+      document.getElementById("finish-btn").addEventListener("click", () => openModal("finish-modal"));
+      document.getElementById("finish-cancel").addEventListener("click", () => closeModal("finish-modal"));
+      document.getElementById("finish-confirm").addEventListener("click", async () => {
+        const t = I18N[getLang()];
+        try {
+          if (!currentArtifact) return;
+          await actionFinish(currentArtifact);
+          closeModal("finish-modal");
+          showToast(t.done);
+          await boot();
+        } catch (e) {
+          console.error("[finish]", e);
+          showToast(t.err + (e?.message || "finish"));
+        }
+      });
+
+      // Return
+      document.getElementById("return-btn").addEventListener("click", () => {
+        document.getElementById("return-notes").value = "";
+        openModal("return-modal");
+      });
+      document.getElementById("return-cancel").addEventListener("click", () => closeModal("return-modal"));
+      document.getElementById("return-confirm").addEventListener("click", async () => {
+        const t = I18N[getLang()];
+        try {
+          if (!currentArtifact) return;
+          const notes = document.getElementById("return-notes").value || "";
+          await actionReturnFromGallery(currentArtifact, notes);
+          closeModal("return-modal");
+          showToast(t.done);
+          await boot();
+        } catch (e) {
+          console.error("[return]", e);
+          showToast(t.err + (e?.message || "return"));
+        }
+      });
+
+      // Sold in gallery
+      document.getElementById("sold-gallery-btn").addEventListener("click", () => {
+        document.getElementById("sold-amount").value = "";
+        document.getElementById("sold-notes").value = "";
+        openModal("sold-modal");
+      });
+      document.getElementById("sold-cancel").addEventListener("click", () => closeModal("sold-modal"));
+      document.getElementById("sold-confirm").addEventListener("click", async () => {
+        const t = I18N[getLang()];
+        try {
+          if (!currentArtifact) return;
+          const amount = document.getElementById("sold-amount").value;
+          const notes = document.getElementById("sold-notes").value || "";
+          await actionSoldInGallery(currentArtifact, amount, notes);
+          closeModal("sold-modal");
+          showToast(t.done);
+          await boot();
+        } catch (e) {
+          console.error("[sold in gallery]", e);
+          showToast(t.err + (e?.message === "amount" ? "amount" : (e?.message || "sold")));
+        }
+      });
+
+      // Edit (modal)
+      document.getElementById("edit-btn").addEventListener("click", () => openModal("edit-modal"));
+      document.getElementById("edit-cancel").addEventListener("click", () => closeModal("edit-modal"));
+      document.getElementById("edit-save").addEventListener("click", async () => {
+        const t = I18N[getLang()];
+        try {
+          if (!currentArtifact) return;
+
+          const newDesc = document.getElementById("edit-desc").value || "";
+          const file = document.getElementById("edit-image").files?.[0] || null;
+
+          await actionEdit(currentArtifact, newDesc, file);
+
+          closeModal("edit-modal");
+          showToast(t.saved);
+          await boot();
+        } catch (e) {
+          console.error("[edit]", e);
+          showToast(t.err + (e?.message || "edit"));
+        }
+      });
+
+      // close modals when clicking outside
+      for (const id of ["delete-modal","finish-modal","return-modal","sold-modal","edit-modal"]) {
+        document.getElementById(id).addEventListener("click", (e) => {
+          if (e.target.id === id) closeModal(id);
+        });
+      }
+
+      // init
+      boot().catch(console.error);
+    </script>
+
+    <!--
+      ASSUMPTIONS (please read):
+      1) URL: artifact.html?id=<artifact_uuid>
+      2) tables + columns exist:
+         - artifacts: id,user_id,title,description,main_image,status,created_at,updated_at
+         - sales: id,user_id,artifact_id,amount,created_at,buyer_name,notes,sold_channel,receipt_id,gallery_id
+         - gallery_movements: id,user_id,artifact_id,created_at,movement_type,gallery_name,notes,receipt_id
+      3) statuses are exactly: in_progress | ready | sent_to_gallery | sold
+      4) Storage bucket name is "artifacts" (or set localStorage.storageBucket)
+      5) sale_detail.html exists (or change the link in renderRecordSection)
+      6) Edit is implemented as a modal (not a separate page) to keep MVP fast.
+    -->
+  </body>
+</html>
