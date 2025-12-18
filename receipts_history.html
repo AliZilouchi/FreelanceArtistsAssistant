@@ -1,0 +1,912 @@
+<!doctype html>
+<html lang="fa" dir="rtl" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Receipts History | Honarapp</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
+      body { box-sizing: border-box; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html, body {
+        height: 100%;
+        font-family: "Vazirmatn", "Inter", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a1410 0%, #0a0a0a 100%);
+        color: #ffffff;
+      }
+
+      [dir="ltr"] body { font-family: "Inter", sans-serif; }
+
+      .page-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        padding: 2rem;
+      }
+
+      .page-container { max-width: 1200px; margin: 0 auto; }
+
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .page-header { flex: 1; }
+
+      .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #d4af37;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-subtitle {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 400;
+      }
+
+      .language-toggle {
+        display: flex;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem;
+        border-radius: 50px;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+      }
+
+      .lang-btn {
+        padding: 0.5rem 1.25rem;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      .lang-btn.active {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+      }
+
+      /* mode switch */
+      .mode-switch {
+        display: inline-flex;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem;
+        border-radius: 50px;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+      }
+      .mode-btn {
+        padding: 0.5rem 1.1rem;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 50px;
+        transition: all 0.25s ease;
+        font-family: inherit;
+        white-space: nowrap;
+      }
+      .mode-btn.active {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+      }
+
+      .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .left-stack {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+        flex: 1;
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 240px;
+        max-width: 420px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 12px;
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.08);
+        border-color: #d4af37;
+      }
+
+      .search-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+
+      .action-buttons { display: flex; gap: 0.75rem; }
+
+      .action-btn {
+        padding: 0.875rem 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 12px;
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .action-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(212, 175, 55, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .action-btn.primary {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+        border: none;
+      }
+
+      .action-btn.primary:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+      }
+
+      .table-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .table-wrapper { overflow-x: auto; }
+
+      .data-table { width: 100%; border-collapse: collapse; }
+
+      .data-table thead {
+        background: rgba(212, 175, 55, 0.1);
+        border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+      }
+
+      .data-table th {
+        padding: 1.25rem 1.5rem;
+        text-align: right;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #d4af37;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+
+      [dir="ltr"] .data-table th { text-align: left; }
+
+      .data-table tbody tr {
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .data-table tbody tr:hover { background: rgba(212, 175, 55, 0.05); }
+
+      .data-table td {
+        padding: 1.25rem 1.5rem;
+        text-align: right;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.9);
+        vertical-align: middle;
+      }
+
+      [dir="ltr"] .data-table td { text-align: left; }
+
+      .amount-value {
+        font-weight: 700;
+        color: #d4af37;
+        font-size: 1rem;
+        white-space: nowrap;
+      }
+
+      .pill {
+        display: inline-block;
+        padding: 0.35rem 0.8rem;
+        border-radius: 999px;
+        border: 1px solid rgba(212, 175, 55, 0.25);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.85rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        letter-spacing: 0.2px;
+      }
+
+      .table-footer {
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(212, 175, 55, 0.1);
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .table-info { font-size: 0.875rem; color: rgba(255, 255, 255, 0.6); }
+
+      .pagination { display: flex; gap: 0.5rem; }
+
+      .page-btn {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      .page-btn:hover {
+        background: rgba(212, 175, 55, 0.1);
+        border-color: rgba(212, 175, 55, 0.4);
+        color: #d4af37;
+      }
+
+      .page-btn.active {
+        background: linear-gradient(135deg, #d4af37, #b8860b);
+        color: #000;
+        border: none;
+      }
+
+      .empty-row {
+        text-align: center !important;
+        padding: 2rem 1rem !important;
+        color: rgba(255, 255, 255, 0.65) !important;
+      }
+
+      @media (max-width: 768px) {
+        .page-wrapper { padding: 1rem; }
+        .page-title { font-size: 1.5rem; }
+        .action-bar { flex-direction: column; align-items: stretch; }
+        .search-box { max-width: 100%; }
+        .action-buttons { width: 100%; justify-content: stretch; }
+        .action-btn { flex: 1; justify-content: center; }
+        .data-table th, .data-table td { padding: 1rem 0.75rem; font-size: 0.8125rem; }
+        .table-footer { flex-direction: column; text-align: center; }
+        .mode-switch { width: 100%; justify-content: center; }
+      }
+    </style>
+  </head>
+
+  <body class="h-full">
+    <div class="page-wrapper">
+      <div class="page-container">
+        <header class="top-bar">
+          <div class="page-header">
+            <h1 class="page-title" id="page-title">تاریخچه رسیدها</h1>
+            <p class="page-subtitle" id="page-subtitle">رسیدهای فروش و ارسال به گالری</p>
+          </div>
+
+          <div class="language-toggle">
+            <button class="lang-btn" data-lang="fa" id="btn-fa">فارسی</button>
+            <button class="lang-btn" data-lang="en" id="btn-en">English</button>
+          </div>
+        </header>
+
+        <div class="action-bar">
+          <div class="left-stack">
+            <div class="mode-switch" role="tablist" aria-label="Receipt mode">
+              <button class="mode-btn" id="mode-sales" type="button">رسیدهای فروش</button>
+              <button class="mode-btn" id="mode-gallery" type="button">رسیدهای گالری</button>
+            </div>
+
+            <div class="search-box">
+              <input type="text" class="search-input" id="search-input" placeholder="جستجو..." />
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="action-btn" id="back-btn">
+              <span>←</span>
+              <span id="back-text">بازگشت</span>
+            </button>
+
+            <button class="action-btn primary" id="export-btn">
+              <span>📊</span>
+              <span id="export-text">خروجی Excel</span>
+            </button>
+          </div>
+        </div>
+
+        <main class="table-container">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th id="col-date">تاریخ</th>
+                  <th id="col-receipt">شناسه رسید</th>
+                  <th id="col-party">خریدار / گالری</th>
+                  <th id="col-items">تعداد</th>
+                  <th id="col-total">جمع</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+
+          <footer class="table-footer">
+            <div class="table-info" id="table-info">—</div>
+            <nav class="pagination" id="pagination"></nav>
+          </footer>
+        </main>
+      </div>
+    </div>
+
+    <!-- Supabase UMD -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="./js/supabase.js"></script>
+    <script src="./js/guard.js"></script>
+
+    <script>
+      // -----------------------
+      // i18n + lang
+      // -----------------------
+      const I18N = {
+        fa: {
+          title: "تاریخچه رسیدها",
+          subtitle: "رسیدهای فروش و ارسال به گالری",
+          back: "بازگشت",
+          export: "خروجی Excel",
+          search_sales: "جستجو (خریدار یا شناسه رسید)...",
+          search_gallery: "جستجو (گالری یا شناسه رسید)...",
+          mode_sales: "رسیدهای فروش",
+          mode_gallery: "رسیدهای گالری",
+          date: "تاریخ",
+          receipt: "شناسه رسید",
+          party_sales: "خریدار",
+          party_gallery: "گالری",
+          items: "تعداد",
+          total: "جمع",
+          empty: "هیچ رسیدی ثبت نشده است ✨",
+          showing: (from, to, total) => `نمایش ${from}-${to} از ${total} مورد`,
+          next: "→",
+          dash: "—",
+        },
+        en: {
+          title: "Receipts History",
+          subtitle: "Sales and gallery-send receipts",
+          back: "Back",
+          export: "Export Excel",
+          search_sales: "Search (buyer or receipt id)...",
+          search_gallery: "Search (gallery or receipt id)...",
+          mode_sales: "Sales Receipts",
+          mode_gallery: "Gallery Receipts",
+          date: "Date",
+          receipt: "Receipt ID",
+          party_sales: "Buyer",
+          party_gallery: "Gallery",
+          items: "Items",
+          total: "Total",
+          empty: "No receipts yet ✨",
+          showing: (from, to, total) => `Showing ${from}-${to} of ${total} items`,
+          next: "→",
+          dash: "—",
+        },
+      };
+
+      function getLang() {
+        const v = localStorage.getItem("lang");
+        return v === "en" ? "en" : "fa";
+      }
+
+      function applyLang(lang) {
+        const safe = lang === "en" ? "en" : "fa";
+        localStorage.setItem("lang", safe);
+
+        document.documentElement.lang = safe;
+        document.documentElement.dir = safe === "fa" ? "rtl" : "ltr";
+
+        document.getElementById("btn-fa").classList.toggle("active", safe === "fa");
+        document.getElementById("btn-en").classList.toggle("active", safe === "en");
+
+        const t = I18N[safe];
+        document.getElementById("page-title").textContent = t.title;
+        document.getElementById("page-subtitle").textContent = t.subtitle;
+        document.getElementById("back-text").textContent = t.back;
+        document.getElementById("export-text").textContent = t.export;
+
+        // table headers update depends on mode
+        renderHeaders();
+        setSearchPlaceholder();
+      }
+
+      document.getElementById("btn-fa").addEventListener("click", () => { applyLang("fa"); refresh(); });
+      document.getElementById("btn-en").addEventListener("click", () => { applyLang("en"); refresh(); });
+
+      // -----------------------
+      // formatting
+      // -----------------------
+      function formatNumber(n) {
+        const locale = getLang() === "fa" ? "fa-IR" : "en-GB";
+        return new Intl.NumberFormat(locale).format(Number(n || 0));
+      }
+
+      function formatMoney(n) {
+        const symbol = localStorage.getItem("currencySymbol") || "$";
+        return symbol + formatNumber(n);
+      }
+
+      function formatDate(iso) {
+        const d = new Date(iso);
+        if (getLang() === "fa") {
+          return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }).format(d);
+        }
+        return new Intl.DateTimeFormat("en-GB", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).format(d);
+      }
+
+      function shortId(uuid) {
+        if (!uuid) return "";
+        const s = String(uuid);
+        return s.length > 12 ? (s.slice(0, 8) + "…" + s.slice(-4)) : s;
+      }
+
+      function isUuid(s) {
+        return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s);
+      }
+
+      // -----------------------
+      // mode switch
+      // -----------------------
+      const MODES = { SALES: "sales", GALLERY: "gallery" };
+      let mode = localStorage.getItem("receiptsMode") === MODES.GALLERY ? MODES.GALLERY : MODES.SALES;
+
+      function setMode(nextMode) {
+        mode = nextMode;
+        localStorage.setItem("receiptsMode", mode);
+
+        document.getElementById("mode-sales").classList.toggle("active", mode === MODES.SALES);
+        document.getElementById("mode-gallery").classList.toggle("active", mode === MODES.GALLERY);
+
+        renderHeaders();
+        setSearchPlaceholder();
+        currentPage = 1;
+        refresh();
+      }
+
+      document.getElementById("mode-sales").addEventListener("click", () => setMode(MODES.SALES));
+      document.getElementById("mode-gallery").addEventListener("click", () => setMode(MODES.GALLERY));
+
+      // -----------------------
+      // UI state
+      // -----------------------
+      const PAGE_SIZE = 10;
+      let currentPage = 1;
+      let totalCount = 0;
+      let currentSearch = "";
+
+      function renderHeaders() {
+        const t = I18N[getLang()];
+        document.getElementById("col-date").textContent = t.date;
+        document.getElementById("col-receipt").textContent = t.receipt;
+        document.getElementById("col-items").textContent = t.items;
+
+        // dynamic headers
+        document.getElementById("col-party").textContent = mode === MODES.SALES ? t.party_sales : t.party_gallery;
+        document.getElementById("col-total").textContent = mode === MODES.SALES ? t.total : t.dash;
+      }
+
+      function setSearchPlaceholder() {
+        const t = I18N[getLang()];
+        const input = document.getElementById("search-input");
+        input.placeholder = mode === MODES.SALES ? t.search_sales : t.search_gallery;
+      }
+
+      function setTableInfo() {
+        const t = I18N[getLang()];
+        const from = totalCount === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
+        const to = Math.min(currentPage * PAGE_SIZE, totalCount);
+        document.getElementById("table-info").textContent = t.showing(from, to, totalCount);
+      }
+
+      function renderEmpty() {
+        const tbody = document.getElementById("tbody");
+        tbody.innerHTML = "";
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 5;
+        td.className = "empty-row";
+        td.textContent = I18N[getLang()].empty;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
+
+      function renderPagination() {
+        const pag = document.getElementById("pagination");
+        pag.innerHTML = "";
+
+        const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+        const t = I18N[getLang()];
+
+        const pages = [];
+        const start = Math.max(1, Math.min(currentPage - 1, totalPages - 2));
+        const end = Math.min(totalPages, start + 2);
+        for (let p = start; p <= end; p++) pages.push(p);
+
+        for (const p of pages) {
+          const btn = document.createElement("button");
+          btn.className = "page-btn" + (p === currentPage ? " active" : "");
+          btn.textContent = String(p);
+          btn.addEventListener("click", () => { currentPage = p; refresh(); });
+          pag.appendChild(btn);
+        }
+
+        const next = document.createElement("button");
+        next.className = "page-btn";
+        next.textContent = t.next;
+        next.disabled = currentPage >= totalPages;
+        next.style.opacity = next.disabled ? "0.4" : "1";
+        next.style.cursor = next.disabled ? "not-allowed" : "pointer";
+        next.addEventListener("click", () => {
+          if (currentPage < totalPages) { currentPage += 1; refresh(); }
+        });
+        pag.appendChild(next);
+      }
+
+      // -----------------------
+      // queries
+      // -----------------------
+      async function fetchCount(userId) {
+        const s = currentSearch.trim();
+        const uuid = isUuid(s) ? s : null;
+
+        if (mode === MODES.SALES) {
+          let q = window.supabaseClient
+            .from("v_sales_receipts_list")
+            .select("receipt_id", { count: "exact", head: true })
+            .eq("user_id", userId);
+
+          if (uuid) q = q.eq("receipt_id", uuid);
+          else if (s) q = q.ilike("buyer_name", `%${s}%`);
+
+          const res = await q;
+          if (res.error) { console.error("[count sales receipts]", res.error); return 0; }
+          return res.count || 0;
+        } else {
+          let q = window.supabaseClient
+            .from("v_gallery_receipts_list")
+            .select("receipt_id", { count: "exact", head: true })
+            .eq("user_id", userId);
+
+          if (uuid) q = q.eq("receipt_id", uuid);
+          else if (s) q = q.ilike("gallery_name", `%${s}%`);
+
+          const res = await q;
+          if (res.error) { console.error("[count gallery receipts]", res.error); return 0; }
+          return res.count || 0;
+        }
+      }
+
+      async function fetchPage(userId) {
+        const from = (currentPage - 1) * PAGE_SIZE;
+        const to = from + PAGE_SIZE - 1;
+
+        const s = currentSearch.trim();
+        const uuid = isUuid(s) ? s : null;
+
+        if (mode === MODES.SALES) {
+          let q = window.supabaseClient
+            .from("v_sales_receipts_list")
+            .select("receipt_id,receipt_date,buyer_name,total_amount,items_count")
+            .eq("user_id", userId)
+            .order("receipt_date", { ascending: false })
+            .range(from, to);
+
+          if (uuid) q = q.eq("receipt_id", uuid);
+          else if (s) q = q.ilike("buyer_name", `%${s}%`);
+
+          const res = await q;
+          if (res.error) { console.error("[page sales receipts]", res.error); return []; }
+          return res.data || [];
+        } else {
+          let q = window.supabaseClient
+            .from("v_gallery_receipts_list")
+            .select("receipt_id,receipt_date,gallery_name,items_count")
+            .eq("user_id", userId)
+            .order("receipt_date", { ascending: false })
+            .range(from, to);
+
+          if (uuid) q = q.eq("receipt_id", uuid);
+          else if (s) q = q.ilike("gallery_name", `%${s}%`);
+
+          const res = await q;
+          if (res.error) { console.error("[page gallery receipts]", res.error); return []; }
+          return res.data || [];
+        }
+      }
+
+      // -----------------------
+      // render rows
+      // -----------------------
+      function renderRows(rows) {
+        const tbody = document.getElementById("tbody");
+        tbody.innerHTML = "";
+
+        if (!rows.length) {
+          renderEmpty();
+          return;
+        }
+
+        const t = I18N[getLang()];
+
+        for (const r of rows) {
+          const tr = document.createElement("tr");
+          tr.style.cursor = "pointer";
+
+          tr.addEventListener("click", () => {
+            // Assumption: you will build a receipt detail page later.
+            // We pass mode so one page can handle both.
+            window.location.href = `receipt_detail.html?type=${encodeURIComponent(mode)}&id=${encodeURIComponent(r.receipt_id)}`;
+          });
+
+          const tdDate = document.createElement("td");
+          tdDate.textContent = formatDate(r.receipt_date);
+          tr.appendChild(tdDate);
+
+          const tdId = document.createElement("td");
+          const pill = document.createElement("span");
+          pill.className = "pill mono";
+          pill.textContent = shortId(r.receipt_id);
+          tdId.appendChild(pill);
+          tr.appendChild(tdId);
+
+          const tdParty = document.createElement("td");
+          if (mode === MODES.SALES) tdParty.textContent = r.buyer_name || t.dash;
+          else tdParty.textContent = r.gallery_name || t.dash;
+          tr.appendChild(tdParty);
+
+          const tdItems = document.createElement("td");
+          const pill2 = document.createElement("span");
+          pill2.className = "pill";
+          pill2.textContent = formatNumber(r.items_count || 0);
+          tdItems.appendChild(pill2);
+          tr.appendChild(tdItems);
+
+          const tdTotal = document.createElement("td");
+          if (mode === MODES.SALES) {
+            const amt = document.createElement("span");
+            amt.className = "amount-value";
+            amt.textContent = formatMoney(r.total_amount || 0);
+            tdTotal.appendChild(amt);
+          } else {
+            tdTotal.textContent = t.dash;
+          }
+          tr.appendChild(tdTotal);
+
+          tbody.appendChild(tr);
+        }
+      }
+
+      // -----------------------
+      // export
+      // -----------------------
+      function toCsvValue(v) {
+        const s = String(v ?? "");
+        if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+        return s;
+      }
+
+      async function exportCsv() {
+        const { data: u } = await window.supabaseClient.auth.getUser();
+        const user = u.user;
+        if (!user) return;
+
+        const s = currentSearch.trim();
+        const uuid = isUuid(s) ? s : null;
+
+        if (mode === MODES.SALES) {
+          let q = window.supabaseClient
+            .from("v_sales_receipts_list")
+            .select("receipt_id,receipt_date,buyer_name,total_amount,items_count")
+            .eq("user_id", user.id)
+            .order("receipt_date", { ascending: false })
+            .limit(5000);
+
+          if (uuid) q = q.eq("receipt_id", uuid);
+          else if (s) q = q.ilike("buyer_name", `%${s}%`);
+
+          const { data, error } = await q;
+          if (error) { console.error("[export sales receipts]", error); return; }
+
+          const lang = getLang();
+          const header =
+            lang === "fa"
+              ? ["تاریخ", "شناسه رسید", "خریدار", "تعداد", "جمع"]
+              : ["Date", "Receipt ID", "Buyer", "Items", "Total"];
+
+          const lines = [];
+          lines.push(header.map(toCsvValue).join(","));
+
+          for (const r of data || []) {
+            lines.push(
+              [
+                formatDate(r.receipt_date),
+                String(r.receipt_id),
+                r.buyer_name || "",
+                String(r.items_count ?? ""),
+                String(r.total_amount ?? ""),
+              ].map(toCsvValue).join(",")
+            );
+          }
+
+          const csv = "\uFEFF" + lines.join("\n");
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `sales_receipts_${new Date().toISOString().slice(0,10)}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        } else {
+          let q = window.supabaseClient
+            .from("v_gallery_receipts_list")
+            .select("receipt_id,receipt_date,gallery_name,items_count")
+            .eq("user_id", user.id)
+            .order("receipt_date", { ascending: false })
+            .limit(5000);
+
+          if (uuid) q = q.eq("receipt_id", uuid);
+          else if (s) q = q.ilike("gallery_name", `%${s}%`);
+
+          const { data, error } = await q;
+          if (error) { console.error("[export gallery receipts]", error); return; }
+
+          const lang = getLang();
+          const header =
+            lang === "fa"
+              ? ["تاریخ", "شناسه رسید", "گالری", "تعداد"]
+              : ["Date", "Receipt ID", "Gallery", "Items"];
+
+          const lines = [];
+          lines.push(header.map(toCsvValue).join(","));
+
+          for (const r of data || []) {
+            lines.push(
+              [
+                formatDate(r.receipt_date),
+                String(r.receipt_id),
+                r.gallery_name || "",
+                String(r.items_count ?? ""),
+              ].map(toCsvValue).join(",")
+            );
+          }
+
+          const csv = "\uFEFF" + lines.join("\n");
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `gallery_receipts_${new Date().toISOString().slice(0,10)}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        }
+      }
+
+      // -----------------------
+      // refresh
+      // -----------------------
+      async function refresh() {
+        const { data: u } = await window.supabaseClient.auth.getUser();
+        const user = u.user;
+        if (!user) return;
+
+        totalCount = await fetchCount(user.id);
+        setTableInfo();
+
+        const rows = await fetchPage(user.id);
+        renderRows(rows);
+        renderPagination();
+        setTableInfo();
+      }
+
+      // -----------------------
+      // events + boot
+      // -----------------------
+      document.getElementById("back-btn").addEventListener("click", () => {
+        window.location.href = "dashboard.html";
+      });
+
+      document.getElementById("export-btn").addEventListener("click", () => {
+        exportCsv().catch(console.error);
+      });
+
+      let searchTimer = null;
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        currentSearch = e.target.value || "";
+        currentPage = 1;
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => refresh().catch(console.error), 250);
+      });
+
+      (async function boot() {
+        try {
+          if (!window.supabaseClient) throw new Error("supabaseClient not found (check script order).");
+
+          // initial language + mode
+          applyLang(getLang());
+          document.getElementById("mode-sales").classList.toggle("active", mode === MODES.SALES);
+          document.getElementById("mode-gallery").classList.toggle("active", mode === MODES.GALLERY);
+          setSearchPlaceholder();
+
+          await refresh();
+        } catch (e) {
+          console.error("[receipts_history boot]", e);
+        }
+      })();
+
+      /*
+        ASSUMPTIONS:
+        1) You created these views:
+           - public.v_sales_receipts_list (user_id, receipt_id, receipt_date, buyer_name, total_amount, items_count)
+           - public.v_gallery_receipts_list (user_id, receipt_id, receipt_date, gallery_name, items_count)
+        2) Receipt detail page will be:
+           receipt_detail.html?type=sales&id=<receipt_uuid>
+           receipt_detail.html?type=gallery&id=<receipt_uuid>
+      */
+    </script>
+  </body>
+</html>
