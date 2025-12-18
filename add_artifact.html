@@ -81,7 +81,6 @@
       }
       .col-12{ grid-column: span 12; }
       .col-6{ grid-column: span 6; }
-      .col-4{ grid-column: span 4; }
 
       .field{ margin-bottom: .9rem; }
       .label{
@@ -91,7 +90,7 @@
         font-size: .85rem;
         font-weight: 900;
       }
-      .input, .select, .textarea{
+      .input, .textarea{
         width: 100%;
         padding: .85rem .95rem;
         border-radius: 12px;
@@ -104,7 +103,7 @@
         transition: .2s;
       }
       .textarea{ min-height: 140px; resize: vertical; }
-      .input:focus, .select:focus, .textarea:focus{
+      .input:focus, .textarea:focus{
         border-color: rgba(212,175,55,.45);
         background: rgba(255,255,255,.08);
       }
@@ -145,6 +144,53 @@
         white-space: nowrap;
       }
 
+      /* Beautiful bilingual status toggle */
+      .status-toggle{
+        display:flex;
+        gap: .75rem;
+        padding: .6rem;
+        border-radius: 16px;
+        background: rgba(255,255,255,.03);
+        border: 1px solid rgba(212,175,55,.16);
+        backdrop-filter: blur(10px);
+      }
+
+      .status-pill{
+        flex: 1;
+        text-align: start;
+        padding: .85rem 1rem;
+        border-radius: 14px;
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.08);
+        color: rgba(255,255,255,.9);
+        cursor: pointer;
+        transition: .25s;
+        font-family: inherit;
+        display:flex;
+        flex-direction: column;
+        gap: .2rem;
+        user-select: none;
+      }
+
+      .status-pill:hover{
+        transform: translateY(-2px);
+        border-color: rgba(212,175,55,.28);
+        background: rgba(255,255,255,.06);
+      }
+
+      .status-pill.active{
+        background: linear-gradient(135deg, rgba(212,175,55,.25), rgba(184,134,11,.18));
+        border-color: rgba(212,175,55,.45);
+        box-shadow: 0 10px 26px rgba(212,175,55,.12);
+      }
+
+      .st-icon{ font-size: 1.15rem; opacity: .95; }
+      .st-title{ font-weight: 900; font-size: 1rem; color: #d4af37; }
+      .status-pill.active .st-title{ color: #ffd86a; }
+      .st-sub{ font-size: .85rem; color: rgba(255,255,255,.65); line-height: 1.5; }
+
+      [dir="ltr"] .status-pill{ text-align: left; }
+
       .toast{
         position: fixed;
         bottom: 16px;
@@ -167,7 +213,8 @@
       @media (max-width: 900px){
         .page-wrapper{ padding: 1rem; }
         .page-title{ font-size: 1.5rem; }
-        .col-6, .col-4{ grid-column: span 12; }
+        .col-6{ grid-column: span 12; }
+        .status-toggle{ flex-direction: column; }
       }
     </style>
   </head>
@@ -212,11 +259,25 @@
 
             <div class="col-6">
               <div class="field">
-                <label class="label" id="status-label" for="status">وضعیت *</label>
-                <select class="select" id="status">
-                  <option value="in_progress">in_progress</option>
-                  <option value="ready">ready</option>
-                </select>
+                <label class="label" id="status-label">وضعیت *</label>
+
+                <div class="status-toggle" role="radiogroup" aria-label="status">
+                  <button type="button" class="status-pill active" data-value="in_progress" id="st-inp">
+                    <span class="st-icon">⏳</span>
+                    <span class="st-title" id="st-inp-title">در حال انجام</span>
+                    <span class="st-sub" id="st-inp-sub">برای کارهای ناتمام</span>
+                  </button>
+
+                  <button type="button" class="status-pill" data-value="ready" id="st-ready">
+                    <span class="st-icon">✅</span>
+                    <span class="st-title" id="st-ready-title">آماده</span>
+                    <span class="st-sub" id="st-ready-sub">قابل فروش/گالری</span>
+                  </button>
+                </div>
+
+                <!-- hidden input acts like old select -->
+                <input type="hidden" id="status" value="in_progress" />
+
                 <div class="helper" id="status-help">—</div>
               </div>
             </div>
@@ -268,10 +329,15 @@
           titlePh: "مثلاً: پرتره‌ی شب",
           descPh: "در مورد اثر چیزی بنویس…",
           titleHelp: "حداکثر ۱۲۰ کاراکتر.",
-          statusHelp: "در حال انجام یا آماده.",
+          statusHelp: "یکی را انتخاب کن: در حال انجام یا آماده.",
           imageHelp: "تصویر را می‌توانی بعداً هم اضافه/تغییر بدهی.",
           descHelp: "این متن در هر مرحله قابل ویرایش است.",
+          stInpTitle: "در حال انجام",
+          stInpSub: "برای کارهای ناتمام",
+          stReadyTitle: "آماده",
+          stReadySub: "قابل فروش/گالری",
           errTitle: "عنوان را وارد کن.",
+          errStatus: "وضعیت نامعتبر است.",
           done: "ایجاد شد ✅",
           err: "خطا: ",
           badAuth: "جلسه معتبر نیست. دوباره وارد شو.",
@@ -290,10 +356,15 @@
           titlePh: "e.g. Night portrait",
           descPh: "Write something about this artwork…",
           titleHelp: "Up to 120 characters.",
-          statusHelp: "In progress or ready.",
+          statusHelp: "Pick one: in progress or ready.",
           imageHelp: "You can add/change the image later too.",
           descHelp: "This can be updated anytime.",
+          stInpTitle: "In progress",
+          stInpSub: "Work not finished yet",
+          stReadyTitle: "Ready",
+          stReadySub: "Sell / send to gallery",
           errTitle: "Please enter a title.",
+          errStatus: "Invalid status.",
           done: "Created ✅",
           err: "Error: ",
           badAuth: "Session missing. Please login again.",
@@ -330,6 +401,11 @@
         document.getElementById("status-help").textContent = t.statusHelp;
         document.getElementById("image-help").textContent = t.imageHelp;
         document.getElementById("desc-help").textContent = t.descHelp;
+
+        document.getElementById("st-inp-title").textContent = t.stInpTitle;
+        document.getElementById("st-inp-sub").textContent = t.stInpSub;
+        document.getElementById("st-ready-title").textContent = t.stReadyTitle;
+        document.getElementById("st-ready-sub").textContent = t.stReadySub;
       }
 
       document.getElementById("btn-fa").addEventListener("click", () => applyLang("fa"));
@@ -341,6 +417,14 @@
         el.classList.add("show");
         setTimeout(() => el.classList.remove("show"), 1200);
       }
+
+      function setStatus(value){
+        document.getElementById("status").value = value;
+        document.getElementById("st-inp").classList.toggle("active", value === "in_progress");
+        document.getElementById("st-ready").classList.toggle("active", value === "ready");
+      }
+      document.getElementById("st-inp").addEventListener("click", () => setStatus("in_progress"));
+      document.getElementById("st-ready").addEventListener("click", () => setStatus("ready"));
 
       const STORAGE_BUCKET = localStorage.getItem("storageBucket") || "artifacts";
 
@@ -389,7 +473,7 @@
 
         const up = await supabaseClient.storage
           .from(STORAGE_BUCKET)
-          .upload(path, file, { upsert: false });
+          .upload(path, file, { upsert: false }); // important: avoids extra RLS checks
 
         if (up.error) throw up.error;
         return path;
@@ -404,10 +488,10 @@
         if (error) throw error;
       }
 
-      async function boot(){
+      function boot(){
         applyLang(getLang());
+        setStatus(document.getElementById("status").value || "in_progress");
       }
-
       boot();
 
       document.getElementById("save-btn").addEventListener("click", async () => {
@@ -424,6 +508,10 @@
           showToast(t.errTitle);
           return;
         }
+        if (!(status === "in_progress" || status === "ready")){
+          showToast(t.errStatus);
+          return;
+        }
 
         btn.disabled = true;
         btnText.textContent = t.saving;
@@ -433,7 +521,7 @@
           const user = u.user;
           if (!user) throw new Error("bad_auth");
 
-          // 1) create artifact first to get id
+          // 1) create artifact first (need id for storage path)
           const artifactId = await createArtifactRow({
             userId: user.id,
             title,
@@ -441,7 +529,7 @@
             description,
           });
 
-          // 2) upload optional image then update main_image
+          // 2) optional image upload + update main_image
           if (file){
             const path = await uploadArtifactImage({ userId: user.id, artifactId, file });
             await setArtifactMainImage(artifactId, path);
@@ -449,7 +537,7 @@
 
           showToast(t.done);
 
-          // 3) redirect to artifact page
+          // 3) go to artifact page
           window.location.href = `artifact.html?id=${encodeURIComponent(artifactId)}`;
 
         } catch(e){
@@ -464,11 +552,11 @@
 
     <!--
       ASSUMPTIONS:
-      1) RLS allows INSERT into artifacts where user_id = auth.uid()
-      2) artifacts.status values include exactly: in_progress | ready
-      3) Storage bucket name is "artifacts"
-      4) Your Storage policies allow insert for paths: users/<uid>/...
-      5) artifact.html exists and accepts artifact.html?id=<uuid>
+      1) RLS allows INSERT into artifacts where artifacts.user_id = auth.uid()
+      2) artifacts.status enum includes: in_progress | ready
+      3) Storage bucket is "artifacts"
+      4) Storage policies allow INSERT for paths: users/<uid>/...
+      5) artifact.html exists: artifact.html?id=<uuid>
     -->
   </body>
 </html>
