@@ -1073,6 +1073,7 @@
           console.log("[upload] bucket =", STORAGE_BUCKET);
           console.log("[upload] uid =", user.id);
           console.log("[upload] path =", path);
+          console.log("[upload] session?", await supabaseClient.auth.getSession());
           
           const up = await window.supabaseClient.storage
           .from(STORAGE_BUCKET)
