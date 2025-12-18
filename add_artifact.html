@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="fa" dir="rtl" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Artifact | Honarapp</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { height: 100%; font-family: "Vazirmatn","Inter",sans-serif; }
+      body { background: linear-gradient(135deg, #1a1410 0%, #0a0a0a 100%); color: #fff; }
+      [dir="ltr"] body { font-family: "Inter", sans-serif; }
+
+      .page-wrapper { width: 100%; height: 100%; overflow-y: auto; padding: 2rem; }
+      .page-container { max-width: 900px; margin: 0 auto; }
+
+      .top-bar{
+        display:flex; justify-content:space-between; align-items:center;
+        gap:1rem; flex-wrap:wrap; margin-bottom: 1.25rem;
+      }
+
+      .page-title{ font-size:2rem; font-weight:800; color:#d4af37; margin-bottom:.35rem; }
+      .page-subtitle{ color: rgba(255,255,255,.7); font-size:1rem; }
+
+      .language-toggle{
+        display:flex; gap:.5rem; background: rgba(255,255,255,.05);
+        border:1px solid rgba(212,175,55,.2); padding:.5rem; border-radius:999px;
+        backdrop-filter: blur(10px);
+      }
+      .lang-btn{
+        padding:.5rem 1.25rem; border:none; background:transparent;
+        color: rgba(255,255,255,.6); font-weight:800; cursor:pointer;
+        border-radius:999px; transition: .25s; font-family: inherit;
+      }
+      .lang-btn.active{ background: linear-gradient(135deg,#d4af37,#b8860b); color:#000; }
+
+      .action-bar{
+        display:flex; justify-content:space-between; align-items:center;
+        gap:1rem; flex-wrap:wrap; margin-bottom: 1.25rem;
+      }
+
+      .action-buttons{ display:flex; gap:.75rem; }
+      .action-btn{
+        padding:.875rem 1.5rem; border-radius:12px;
+        background: rgba(255,255,255,.05);
+        border:1px solid rgba(212,175,55,.2);
+        color:#fff; font-weight:800; cursor:pointer;
+        display:flex; gap:.5rem; align-items:center;
+        transition: .25s; font-family: inherit;
+      }
+      .action-btn:hover{
+        background: rgba(255,255,255,.08);
+        border-color: rgba(212,175,55,.4);
+        transform: translateY(-2px);
+      }
+      .action-btn.primary{
+        background: linear-gradient(135deg,#d4af37,#b8860b);
+        color:#000; border:none;
+      }
+      .action-btn:disabled{
+        opacity: .55;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+
+      .card{
+        background: rgba(255,255,255,.05);
+        border:1px solid rgba(212,175,55,.2);
+        border-radius:16px;
+        padding: 1.25rem 1.25rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0,0,0,.25);
+      }
+
+      .grid{
+        display:grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1rem;
+      }
+      .col-12{ grid-column: span 12; }
+      .col-6{ grid-column: span 6; }
+      .col-4{ grid-column: span 4; }
+
+      .field{ margin-bottom: .9rem; }
+      .label{
+        display:block;
+        margin-bottom: .35rem;
+        color: rgba(255,255,255,.7);
+        font-size: .85rem;
+        font-weight: 900;
+      }
+      .input, .select, .textarea{
+        width: 100%;
+        padding: .85rem .95rem;
+        border-radius: 12px;
+        background: rgba(255,255,255,.06);
+        border: 1px solid rgba(212,175,55,.2);
+        color: #fff;
+        font-family: inherit;
+        font-size: .95rem;
+        outline: none;
+        transition: .2s;
+      }
+      .textarea{ min-height: 140px; resize: vertical; }
+      .input:focus, .select:focus, .textarea:focus{
+        border-color: rgba(212,175,55,.45);
+        background: rgba(255,255,255,.08);
+      }
+
+      .helper{
+        margin-top: .35rem;
+        color: rgba(255,255,255,.55);
+        font-size: .85rem;
+        line-height: 1.6;
+      }
+
+      .preview{
+        margin-top: .75rem;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(212,175,55,.2);
+        background: rgba(255,255,255,.03);
+        height: 280px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color: rgba(255,255,255,.75);
+        font-size: 3rem;
+      }
+      .preview img{
+        width:100%;
+        height:100%;
+        object-fit: cover;
+        display:block;
+      }
+
+      .pill{
+        display:inline-block; padding:.35rem .85rem; border-radius:999px;
+        border:1px solid rgba(212,175,55,.25);
+        background: rgba(255,255,255,.04);
+        color: rgba(255,255,255,.85);
+        font-weight:900; font-size:.85rem;
+        white-space: nowrap;
+      }
+
+      .toast{
+        position: fixed;
+        bottom: 16px;
+        left: 16px;
+        padding: .75rem 1rem;
+        border-radius: 12px;
+        background: rgba(0,0,0,.6);
+        border: 1px solid rgba(212,175,55,.25);
+        color:#fff;
+        font-weight:900;
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        transform: translateY(8px);
+        transition: .25s;
+        pointer-events: none;
+        z-index: 9999;
+      }
+      .toast.show{ opacity: 1; transform: translateY(0); }
+
+      @media (max-width: 900px){
+        .page-wrapper{ padding: 1rem; }
+        .page-title{ font-size: 1.5rem; }
+        .col-6, .col-4{ grid-column: span 12; }
+      }
+    </style>
+  </head>
+
+  <body class="h-full">
+    <div class="page-wrapper">
+      <div class="page-container">
+        <header class="top-bar">
+          <div>
+            <h1 class="page-title" id="page-title">افزودن اثر جدید</h1>
+            <p class="page-subtitle" id="page-subtitle">اثر جدید بساز و وارد روند کار شو</p>
+          </div>
+
+          <div class="language-toggle">
+            <button class="lang-btn" id="btn-fa">فارسی</button>
+            <button class="lang-btn" id="btn-en">English</button>
+          </div>
+        </header>
+
+        <div class="action-bar">
+          <span class="pill" id="hint-pill">—</span>
+
+          <div class="action-buttons">
+            <button class="action-btn" id="back-btn" type="button">
+              <span>←</span><span id="back-text">بازگشت</span>
+            </button>
+            <button class="action-btn primary" id="save-btn" type="button">
+              <span>💾</span><span id="save-text">ذخیره</span>
+            </button>
+          </div>
+        </div>
+
+        <main class="card">
+          <div class="grid">
+            <div class="col-12">
+              <div class="field">
+                <label class="label" id="title-label" for="title">عنوان *</label>
+                <input class="input" id="title" type="text" maxlength="120" placeholder="" />
+                <div class="helper" id="title-help">—</div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="field">
+                <label class="label" id="status-label" for="status">وضعیت *</label>
+                <select class="select" id="status">
+                  <option value="in_progress">in_progress</option>
+                  <option value="ready">ready</option>
+                </select>
+                <div class="helper" id="status-help">—</div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="field">
+                <label class="label" id="image-label" for="image">تصویر (اختیاری)</label>
+                <input class="input" id="image" type="file" accept="image/*" />
+                <div class="helper" id="image-help">—</div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="preview" id="preview">🎨</div>
+            </div>
+
+            <div class="col-12">
+              <div class="field">
+                <label class="label" id="desc-label" for="description">توضیحات (اختیاری)</label>
+                <textarea class="textarea" id="description" placeholder=""></textarea>
+                <div class="helper" id="desc-help">—</div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">—</div>
+
+    <!-- Supabase UMD + your shared scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="./js/supabase.js"></script>
+    <script src="./js/guard.js"></script>
+
+    <script>
+      const I18N = {
+        fa: {
+          title: "افزودن اثر جدید",
+          subtitle: "اثر جدید بساز و وارد روند کار شو",
+          back: "بازگشت",
+          save: "ذخیره",
+          saving: "در حال ذخیره…",
+          hint: "عنوان و وضعیت اجباری هستند. تصویر و توضیحات اختیاری‌اند.",
+          titleLabel: "عنوان *",
+          statusLabel: "وضعیت *",
+          imageLabel: "تصویر (اختیاری)",
+          descLabel: "توضیحات (اختیاری)",
+          titlePh: "مثلاً: پرتره‌ی شب",
+          descPh: "در مورد اثر چیزی بنویس…",
+          titleHelp: "حداکثر ۱۲۰ کاراکتر.",
+          statusHelp: "در حال انجام یا آماده.",
+          imageHelp: "تصویر را می‌توانی بعداً هم اضافه/تغییر بدهی.",
+          descHelp: "این متن در هر مرحله قابل ویرایش است.",
+          errTitle: "عنوان را وارد کن.",
+          done: "ایجاد شد ✅",
+          err: "خطا: ",
+          badAuth: "جلسه معتبر نیست. دوباره وارد شو.",
+        },
+        en: {
+          title: "Add New Artifact",
+          subtitle: "Create a new artifact and continue your workflow",
+          back: "Back",
+          save: "Save",
+          saving: "Saving…",
+          hint: "Title & status are required. Image & description are optional.",
+          titleLabel: "Title *",
+          statusLabel: "Status *",
+          imageLabel: "Image (optional)",
+          descLabel: "Description (optional)",
+          titlePh: "e.g. Night portrait",
+          descPh: "Write something about this artwork…",
+          titleHelp: "Up to 120 characters.",
+          statusHelp: "In progress or ready.",
+          imageHelp: "You can add/change the image later too.",
+          descHelp: "This can be updated anytime.",
+          errTitle: "Please enter a title.",
+          done: "Created ✅",
+          err: "Error: ",
+          badAuth: "Session missing. Please login again.",
+        },
+      };
+
+      function getLang(){ return localStorage.getItem("lang") === "en" ? "en" : "fa"; }
+
+      function applyLang(lang){
+        const safe = lang === "en" ? "en" : "fa";
+        localStorage.setItem("lang", safe);
+        document.documentElement.lang = safe;
+        document.documentElement.dir = safe === "fa" ? "rtl" : "ltr";
+
+        document.getElementById("btn-fa").classList.toggle("active", safe === "fa");
+        document.getElementById("btn-en").classList.toggle("active", safe === "en");
+
+        const t = I18N[safe];
+        document.getElementById("page-title").textContent = t.title;
+        document.getElementById("page-subtitle").textContent = t.subtitle;
+        document.getElementById("back-text").textContent = t.back;
+        document.getElementById("save-text").textContent = t.save;
+        document.getElementById("hint-pill").textContent = t.hint;
+
+        document.getElementById("title-label").textContent = t.titleLabel;
+        document.getElementById("status-label").textContent = t.statusLabel;
+        document.getElementById("image-label").textContent = t.imageLabel;
+        document.getElementById("desc-label").textContent = t.descLabel;
+
+        document.getElementById("title").placeholder = t.titlePh;
+        document.getElementById("description").placeholder = t.descPh;
+
+        document.getElementById("title-help").textContent = t.titleHelp;
+        document.getElementById("status-help").textContent = t.statusHelp;
+        document.getElementById("image-help").textContent = t.imageHelp;
+        document.getElementById("desc-help").textContent = t.descHelp;
+      }
+
+      document.getElementById("btn-fa").addEventListener("click", () => applyLang("fa"));
+      document.getElementById("btn-en").addEventListener("click", () => applyLang("en"));
+
+      function showToast(msg){
+        const el = document.getElementById("toast");
+        el.textContent = msg;
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 1200);
+      }
+
+      const STORAGE_BUCKET = localStorage.getItem("storageBucket") || "artifacts";
+
+      function renderPreview(file){
+        const box = document.getElementById("preview");
+        box.innerHTML = "";
+        if (!file){
+          box.textContent = "🎨";
+          return;
+        }
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.onload = () => URL.revokeObjectURL(img.src);
+        box.appendChild(img);
+      }
+
+      document.getElementById("image").addEventListener("change", (e) => {
+        const file = e.target.files?.[0] || null;
+        renderPreview(file);
+      });
+
+      document.getElementById("back-btn").addEventListener("click", () => {
+        window.location.href = "dashboard.html";
+      });
+
+      async function createArtifactRow({ userId, title, status, description }) {
+        const { data, error } = await supabaseClient
+          .from("artifacts")
+          .insert({
+            user_id: userId,
+            title,
+            status,
+            description: description || null,
+            main_image: null,
+          })
+          .select("id")
+          .single();
+
+        if (error) throw error;
+        return data.id;
+      }
+
+      async function uploadArtifactImage({ userId, artifactId, file }) {
+        const safeName = String(file.name || "image").replace(/[^\w.\-]+/g, "_");
+        const path = `users/${userId}/artifacts/${artifactId}/${Date.now()}_${safeName}`;
+
+        const up = await supabaseClient.storage
+          .from(STORAGE_BUCKET)
+          .upload(path, file, { upsert: false });
+
+        if (up.error) throw up.error;
+        return path;
+      }
+
+      async function setArtifactMainImage(artifactId, path){
+        const { error } = await supabaseClient
+          .from("artifacts")
+          .update({ main_image: path })
+          .eq("id", artifactId);
+
+        if (error) throw error;
+      }
+
+      async function boot(){
+        applyLang(getLang());
+      }
+
+      boot();
+
+      document.getElementById("save-btn").addEventListener("click", async () => {
+        const t = I18N[getLang()];
+        const btn = document.getElementById("save-btn");
+        const btnText = document.getElementById("save-text");
+
+        const title = document.getElementById("title").value.trim();
+        const status = document.getElementById("status").value;
+        const description = document.getElementById("description").value.trim();
+        const file = document.getElementById("image").files?.[0] || null;
+
+        if (!title){
+          showToast(t.errTitle);
+          return;
+        }
+
+        btn.disabled = true;
+        btnText.textContent = t.saving;
+
+        try{
+          const { data: u } = await supabaseClient.auth.getUser();
+          const user = u.user;
+          if (!user) throw new Error("bad_auth");
+
+          // 1) create artifact first to get id
+          const artifactId = await createArtifactRow({
+            userId: user.id,
+            title,
+            status,
+            description,
+          });
+
+          // 2) upload optional image then update main_image
+          if (file){
+            const path = await uploadArtifactImage({ userId: user.id, artifactId, file });
+            await setArtifactMainImage(artifactId, path);
+          }
+
+          showToast(t.done);
+
+          // 3) redirect to artifact page
+          window.location.href = `artifact.html?id=${encodeURIComponent(artifactId)}`;
+
+        } catch(e){
+          console.error("[add_artifact]", e);
+          const msg = (e?.message === "bad_auth") ? t.badAuth : (t.err + (e?.message || "unknown"));
+          showToast(msg);
+          btn.disabled = false;
+          btnText.textContent = t.save;
+        }
+      });
+    </script>
+
+    <!--
+      ASSUMPTIONS:
+      1) RLS allows INSERT into artifacts where user_id = auth.uid()
+      2) artifacts.status values include exactly: in_progress | ready
+      3) Storage bucket name is "artifacts"
+      4) Your Storage policies allow insert for paths: users/<uid>/...
+      5) artifact.html exists and accepts artifact.html?id=<uuid>
+    -->
+  </body>
+</html>
